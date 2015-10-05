@@ -1,0 +1,15 @@
+<apex:page standardController="sfcloud__Product_Line_Item__c" >
+
+<br/>
+Redirecting...
+<br/>
+<apex:outputField value="{!sfcloud__Product_Line_Item__c.sfcloud__Product_Bundle__c}" rendered="false"/>
+
+<script>
+    var bundleId = '{!JSINHTMLENCODE(sfcloud__Product_Line_Item__c.sfcloud__Product_Bundle__c)}';
+    //alert(bundleId);
+    window.top.location='/apex/sfcloud__ProductBundle_Page?id=' +bundleId+ '&retURL=%2F' +bundleId+ '&wrapMassAction=1&action=AddEdit&scontrolCaching=1';
+</script>
+
+
+</apex:page>

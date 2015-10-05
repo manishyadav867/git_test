@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <fullName>FieldsToDisplay</fullName>
+        <description>Choose custom fields to display while adding Products to:
+1. Opportunity or Quote (Add Bundle/Product button)
+2. Bundle (Add/Edit button)
+Note: Field value is copied if field API names are same.</description>
+        <label>FieldsToDisplay</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>FieldsToFilter</fullName>
+        <description>Choose custom fields to filter by while adding Products to Opportunity or Quote.</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ProductCode</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Family</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>FieldsToFilter</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>FieldsToSort</fullName>
+        <description>Choose custom fields to sort by while adding Products to Opportunity or Quote.</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>ProductCode</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>FieldsToSort</label>
+    </fieldSets>
+    <fields>
+        <fullName>Bundle_Items__c</fullName>
+        <deprecated>false</deprecated>
+        <description>If this is a Bundle Product, this field will have all the Products Name along with Qty.</description>
+        <externalId>false</externalId>
+        <label>Bundle Items</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Copied_from_Bundle__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Reference to Bundle from which the Product was generated</description>
+        <externalId>false</externalId>
+        <label>Generated from Bundle</label>
+        <referenceTo>Product_Bundle__c</referenceTo>
+        <relationshipLabel>Generated Products</relationshipLabel>
+        <relationshipName>Products</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Image_URL__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Image URL</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>Image__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(
+  Image_URL__c==&apos;&apos;,
+  &apos;Image Unavailable&apos;,
+  IMAGE(Image_URL__c , &quot;Image Unavailable&quot;, 75, 75)
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Image</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Cost of the product. This field can be used to calculate margin.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Cost of the product. This field can be used to calculate margin.</inlineHelpText>
+        <label>Product Cost</label>
+        <precision>12</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <type>Currency</type>
+    </fields>
+</CustomObject>

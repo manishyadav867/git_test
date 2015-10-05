@@ -1,0 +1,6 @@
+<apex:page action="{!initPage}" controller="sfcloud.ProductBundle_ListButtonController" title="Product Bundle">
+    
+    <apex:pageMessages escape="false" /><br/>
+    Please click <a href='/{!id}'>here</a> to go back to previous page    
+    
+</apex:page>

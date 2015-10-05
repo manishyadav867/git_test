@@ -1,0 +1,26 @@
+<apex:component access="global">
+<style>
+#footer-configero { width: 98%; height: 100px; padding: 1%; margin-top: 10px; background: url('{!URLFOR($Resource.ConfigRoleMgr__FooterGradientBackground)}') repeat-x 50% 50%; border-radius: 5px; }
+#footer-bg-logo { background: url('{!URLFOR($Resource.ConfigRoleMgr__ConfigeroLogoBlankBG70)}') no-repeat 100% 0; height: 70px; }
+#footer-configero p { color: #DDDDDD; } 
+#footer-configero a { color: #CCCCCC; }
+#footer-configero img { border: 0; }
+.left { float: left; }
+#footer-configero .icons a { padding: 0 15px;  }
+</style>
+ <div id="footer-configero">
+ 	<div id="footer-bg-logo">
+ 		<div class="left" style="width: 200px;">
+		    <p><strong>Designed by Configero, LLC</strong></p>
+		    <p><a href="http://www.configero.com" target="_blank">www.configero.com</a></p>
+		    <p><a href="mailto:info@configero.com">info@configero.com</a></p>
+	    </div>
+	    <div class="left icons">	    
+	    	<a href="http://appexchange.salesforce.com/results?keywords=Configero" target="_blank"><apex:image value="{!$Resource.ConfigRoleMgr__IconSmallMore}"/></a>
+	    	<a href="http://appexchange.salesforce.com/listingDetail?listingId=a0N30000009wCuZEAU" target="_blank"><apex:image value="{!$Resource.ConfigRoleMgr__IconSmallGrid}"/></a>
+	    	<a href="http://appexchange.salesforce.com/listingDetail?listingId=a0N30000009wSwvEAE" target="_blank"><apex:image value="{!$Resource.ConfigRoleMgr__IconSmallMiniGrid}"/></a>
+	    	<a href="http://appexchange.salesforce.com/listingDetail?listingId=a0N30000009wRkqEAE" target="_blank"><apex:image value="{!$Resource.ConfigRoleMgr__IconSmallDataLoader}"/></a>
+	    </div>
+    </div>
+ </div>
+</apex:component>

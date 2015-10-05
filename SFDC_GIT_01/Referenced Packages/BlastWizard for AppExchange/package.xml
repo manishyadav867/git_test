@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BlastWizard for AppExchange</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>Boomerang&apos;s Email Marketing Service for Salesforce</description>
+    <namespacePrefix>bmg</namespacePrefix>
+    <types>
+        <members>Activity.ClickDetails__c</members>
+        <members>Activity.DateClicked__c</members>
+        <members>Activity.DateOpened__c</members>
+        <members>Activity.DateUnsubscribed__c</members>
+        <members>Activity.IsEmailClicked__c</members>
+        <members>Activity.IsEmailOpened__c</members>
+        <members>Activity.IsUnsubscribed__c</members>
+        <members>Activity.MessageURL__c</members>
+        <members>Activity.StatusDescription__c</members>
+        <members>Activity.StatusUpdatedDate__c</members>
+        <members>Activity.Type__c</members>
+        <members>Activity.id__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>BlastWizardforAppExchange</members>
+        <name>CustomTab</name>
+    </types>
+    <version>33.0</version>
+</Package>

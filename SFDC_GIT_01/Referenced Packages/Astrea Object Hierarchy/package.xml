@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Astrea Object Hierarchy</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <namespacePrefix>ObjectHierarchy</namespacePrefix>
+    <types>
+        <members>AstreaObjectHierarchyController</members>
+        <members>AstreaObjectHierarchyControllerTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>AstreaObjectHierarchyVFPage</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>Account.Astrea_Object_Hierarchy</members>
+        <members>Asset.Astrea_Object_Hierarchy</members>
+        <members>Case.Astrea_Object_Hierarchy</members>
+        <members>Contact.Astrea_Object_Hierarchy</members>
+        <members>Lead.Astrea_Object_Hierarchy</members>
+        <members>Opportunity.Astrea_Object_Hierarchy</members>
+        <name>WebLink</name>
+    </types>
+    <version>33.0</version>
+</Package>

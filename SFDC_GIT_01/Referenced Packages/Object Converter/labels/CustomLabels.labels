@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>BTNLBL_Cancel</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_Clone</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Clone</shortDescription>
+        <value>Clone</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_Delete</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_Edit</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_Home</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Home</shortDescription>
+        <value>Home</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_New</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New</shortDescription>
+        <value>New</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_QuickSave</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Quick Save</shortDescription>
+        <value>Quick Save</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_Save</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>BTNLBL_View</fullName>
+        <categories>BTNLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View</shortDescription>
+        <value>View</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_CannotInsertUpdate</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot Insert Update</shortDescription>
+        <value>Cannot insert or update this record here. Please contact your Salesforce administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_DuplicateMapName</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Duplicate Map Name</shortDescription>
+        <value>Map name already used.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_InvalidMapName</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid Map Name</shortDescription>
+        <value>Map name can contain only following characters: Alphanumeric (A-Z, a-z, 0-9), Special Characters: &apos;-&apos;,  &apos;_&apos;,  &apos;:&apos;</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_InvalidURLParameter</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Invalid URL Parameter</shortDescription>
+        <value>Invalid URL Parameter. Please contact your Salesforce administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_MultipleMapsSelected</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Multiple Maps Selected</shortDescription>
+        <value>Please select only one map.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_MultipleTargetRecords</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Multiple Target Records</shortDescription>
+        <value>Multiple target records found for update.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoFieldSelected</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Field Selected</shortDescription>
+        <value>No field selected.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoMapSelected</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Map Selected</shortDescription>
+        <value>Please select at least one map.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoMultipleTargetRecordAction</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Multiple Target Record Action</shortDescription>
+        <value>Please select &apos;Multiple Target Record Action&apos;.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoPermissions</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Insufficient permissions</shortDescription>
+        <value>You don&apos;t have required access rights on this page. Please contact your Salesforce administrator.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoPostConvertAction</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Post Convert Action</shortDescription>
+        <value>Please select &apos;Post Convert Action&apos;.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoSourceField</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Source Field</shortDescription>
+        <value>Source object field is not selected for some of required fields.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoSourceObject</fullName>
+        <categories>General</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Source Object</shortDescription>
+        <value>Please select &apos;Source Object&apos;.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoSourceTargetObject</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Source Target Object</shortDescription>
+        <value>Source/Target record not found. Please contact your Salesforce administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoSourceValue</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Source Value</shortDescription>
+        <value>&apos;Source Value&apos; is not entered for some of required fields</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoTargetObject</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Target Object</shortDescription>
+        <value>Please select &apos;Target Object&apos;.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoTargetObjectAction</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Target Object Action</shortDescription>
+        <value>Please select &apos;Target Object Action&apos;.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_NoUniqueField</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Unique Field</shortDescription>
+        <value>No unique field defined.</value>
+    </labels>
+    <labels>
+        <fullName>ERRMSG_TooManyMaps</fullName>
+        <categories>ERRMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Too Many Maps</shortDescription>
+        <value>Cannot process more than 20 objects at a time. Please contact your Salesforce administrator.</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Action</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Action</shortDescription>
+        <value>Action</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Created</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Created</shortDescription>
+        <value>Created</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Description</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Description</shortDescription>
+        <value>Description</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Edit</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_FieldMap</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field Map</shortDescription>
+        <value>Field Map</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_IfMultipleTargetRecordFound</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>If Multiple Target Record Found</shortDescription>
+        <value>If Multiple Target Record Found</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_MapName</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Map Name</shortDescription>
+        <value>Map Name</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_ObjectId</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Object Id</shortDescription>
+        <value>Object Id</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_OverrideFieldValue</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Override Field Value</shortDescription>
+        <value>Override Field Value</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_PopulateIfAccess</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>PopulateIfAccess</shortDescription>
+        <value>Populate only If user has Access</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_PostConvertAction</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Post Convert Action</shortDescription>
+        <value>Post Convert Action</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Processing</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Processing</shortDescription>
+        <value>Processing...</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Required</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Required</shortDescription>
+        <value>Required</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_ResultObjectName</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Result Object Name</shortDescription>
+        <value>Result Object Name</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_SourceObject</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Source Object</shortDescription>
+        <value>Source Object</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_SourceObjectAction</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Source Object Action</shortDescription>
+        <value>Source Object Action</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_SourceObjectFields</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Source Object Fields</shortDescription>
+        <value>Source Object Fields</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_SourceObjectName</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Source Object Name</shortDescription>
+        <value>Source Object Name</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_TargetObject</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Target Object</shortDescription>
+        <value>Target Object</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_TargetObjectAction</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Target Object Action</shortDescription>
+        <value>Target Object Action</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_TargetObjectFields</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Target Object Fields</shortDescription>
+        <value>Target Object Fields</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_TargetRecordType</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Target Record Type</shortDescription>
+        <value>Target Record Type</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_TargetValue</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Target Value</shortDescription>
+        <value>Target Value</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Type</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Type</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_UniqueKey</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unique Key</shortDescription>
+        <value>Unique Key</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_Updated</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Updated</shortDescription>
+        <value>Updated</value>
+    </labels>
+    <labels>
+        <fullName>PGLBL_View</fullName>
+        <categories>PGLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View</shortDescription>
+        <value>View</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_AlwaysCreateNew</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Always Create New</shortDescription>
+        <value>Always Create New</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_AlwaysUpdateOnly</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Always Update Only</shortDescription>
+        <value>Always Update Only</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_DisplayError</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Display Error</shortDescription>
+        <value>Display Error</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_Equals</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Equals</shortDescription>
+        <value>Equals</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_LetUserSelect</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Let User Select</shortDescription>
+        <value>Let User Select</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_None</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Picklist label None</shortDescription>
+        <value>--None--</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_ProcessAllRecords</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Process All Records</shortDescription>
+        <value>Process All Records</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_ProcessNoRecord</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Process No Record</shortDescription>
+        <value>Process No Record</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_RedirectToSourceObject</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Redirect To Source Object</shortDescription>
+        <value>Redirect To Source Object</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_RedirectToTargetObject</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Redirect To Target Object</shortDescription>
+        <value>Redirect To Target Object</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_StaticValue</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Static Value</shortDescription>
+        <value>Static Value</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_TargetObjectID</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Target Object ID</shortDescription>
+        <value>Target Object ID</value>
+    </labels>
+    <labels>
+        <fullName>PKLLBL_UpdateIfFoundElseCreate</fullName>
+        <categories>PKLLBL</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Update If Found Else Create</shortDescription>
+        <value>Update if found else create new</value>
+    </labels>
+    <labels>
+        <fullName>WARMSG_DeleteConfirmation</fullName>
+        <categories>WARMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete Confirmation</shortDescription>
+        <value>Are you sure you want to delete?</value>
+    </labels>
+    <labels>
+        <fullName>WARMSG_DoNotRefreshPage</fullName>
+        <categories>WARMSG</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Do Not Refresh Page</shortDescription>
+        <value>Please do not refresh this page. Doing so will process the Source and Target record again.</value>
+    </labels>
+</CustomLabels>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DocuSign For Salesforce Quotes</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <namespacePrefix>dfsq</namespacePrefix>
+    <types>
+        <members>ConnectToQuoteStatus_Test</members>
+        <members>DocuSignSendQuoteController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>DocuSign_SendQuote</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>ConnectToQuoteStatus</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>dsfs__DocuSign_Status__c.Quote__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Quote-Quote Layout For DocuSign</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Quote.Create_PDF_For_DocuSign</members>
+        <members>Quote.Send_with_DocuSign</members>
+        <name>WebLink</name>
+    </types>
+    <version>33.0</version>
+</Package>

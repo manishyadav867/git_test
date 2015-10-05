@@ -1,0 +1,31 @@
+<apex:page standardController="OpportunityLineItem" >
+
+<br/>
+Redirecting... 
+<br/>
+<apex:outputField value="{!OpportunityLineItem.id}" rendered="false"/>
+<apex:outputField value="{!OpportunityLineItem.Opportunityid}" rendered="false"/>
+<apex:outputField value="{!OpportunityLineItem.sfcloud__Product_Bundle__c}" rendered="false"/>
+<apex:outputField value="{!OpportunityLineItem.sfcloud__Product_Bundle__r.Name}" rendered="false"/>
+
+<script>
+    var oppId = '{!JSINHTMLENCODE(OpportunityLineItem.OpportunityId)}';
+    var itemId = '{!JSINHTMLENCODE(OpportunityLineItem.id)}';
+    var bundleId = '{!JSINHTMLENCODE(OpportunityLineItem.sfcloud__Product_Bundle__c)}';
+    var bundleName = '{!JSINHTMLENCODE(OpportunityLineItem.sfcloud__Product_Bundle__r.Name)}';
+    //var canDeleteItems = '$Setup.Bundle_CS__c.Can_delete_Bundle_item__c'; --> Custom setting to let certain users delete bundle items
+    //alert('Opp Id-' +oppId+ ' Item Id-' +itemId+ ' is part of Bundle ' +bundleName);
+    
+    //Individual bundle items cannot be deleted
+    //if(bundleId!='' && canDeleteItems=='false')
+    if(bundleId!='')
+        if(confirm('This item is part of Bundle "' +bundleName+ '". If you delete this item, all the items belonging to this Bundle will be deleted.\n\nAre you sure?'))
+            window.top.location='/apex/sfcloud__ProductBundle_ListButton?queryString=' +oppId+ ',DeleteAllItems,' +itemId;
+        else
+            window.top.location='/' +oppId; 
+    else
+        window.top.location='/apex/sfcloud__ProductBundle_ListButton?queryString=' +oppId+ ',DeleteThisItem,' +itemId;
+</script>
+
+
+</apex:page>

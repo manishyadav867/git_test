@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <comment>Redirect to custom VF page to add / edit line items</comment>
+        <content>ProductBundle_Redirect</content>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Visualforce</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <customHelpPage>ProductBundle_Documentation</customHelpPage>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>This is child object to Product_Bundle__c. Allows user to enter multiple line items that a bundle can have.</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>true</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fieldSets>
+        <fullName>FieldsToDisplay</fullName>
+        <availableFields>
+            <field>Product_Code__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>Choose custom fields to display while
+1. Configuring Bundle (Add/Edit button) 
+2. Creating Bundles on the fly (Create Bundle button) 
+3. Adding Bundles to Opportunity or Quote (Add Bundle/Products button)
+Note: Field value is copied if field API names are same.</description>
+        <label>FieldsToDisplay</label>
+    </fieldSets>
+    <fields>
+        <fullName>Discount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(List_Price__c = 0, 0,  (List_Price__c - Sale_Price__c)/List_Price__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Discount (%)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Image__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(
+  Product_Name__r.Image_URL__c==&apos;&apos;,
+  &apos;Image Unavailable&apos;,
+  IMAGE( Product_Name__r.Image_URL__c , &quot;Image Unavailable&quot;, 75, 75)
+)</formula>
+        <label>Image</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Line_Item_Description__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Line Item Description</description>
+        <externalId>false</externalId>
+        <label>Line Item Description</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>List_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>List Price</label>
+        <precision>18</precision>
+        <required>true</required>
+        <scale>4</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Margin__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(
+  Sale_Price__c !=0,
+  1-( Product_Name__r.Product_Cost__c /  Sale_Price__c),
+  0
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Margin (%)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>PricebookEntryId__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The field is used to copy Bundle Line items to Opp Products.</description>
+        <externalId>false</externalId>
+        <label>PricebookEntryId</label>
+        <length>18</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Pricebook_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>As Bundle may have product from different pricebook, this will store pricebook for products added.</description>
+        <externalId>false</externalId>
+        <label>Pricebook Name</label>
+        <length>240</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Bundle__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product Bundle</label>
+        <referenceTo>Product_Bundle__c</referenceTo>
+        <relationshipLabel>Bundle Line Items</relationshipLabel>
+        <relationshipName>Bundle_Line_Items</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Product_Code__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Product Code</description>
+        <externalId>false</externalId>
+        <label>Product Code</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product Cost</label>
+        <precision>12</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Product_Family__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Product Family</description>
+        <externalId>false</externalId>
+        <label>Product Family</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Name__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Product Name</description>
+        <externalId>false</externalId>
+        <label>Product Name</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipName>Product_Line_Items</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Qty__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Quantity</description>
+        <externalId>false</externalId>
+        <label>Quantity</label>
+        <precision>12</precision>
+        <required>true</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sale_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Sale Price</description>
+        <externalId>false</externalId>
+        <label>Sale Price</label>
+        <precision>18</precision>
+        <required>true</required>
+        <scale>4</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Sort_Order__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Sort Order</label>
+        <precision>3</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>Product_Cost__c *  Qty__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>Qty__c  *  Sale_Price__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Total_Unit_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>List_Price__c * Qty__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Total List Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Unit_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <description>List Price for the Product</description>
+        <externalId>false</externalId>
+        <label>(Deprecated) List Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>4</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <label>Bundle Line Item</label>
+    <nameField>
+        <displayFormat>Line Item - {0000}</displayFormat>
+        <label>Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Bundle Line Items</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>isProductNameValid</fullName>
+        <active>true</active>
+        <description>Product name is must for Product line item.</description>
+        <errorConditionFormula>ISBLANK(Product_Name__c)</errorConditionFormula>
+        <errorDisplayField>Product_Name__c</errorDisplayField>
+        <errorMessage>Product name is must</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>isQty_SalePriceValid</fullName>
+        <active>false</active>
+        <description>1. Qty must be &gt;= 1
+2. Sale Price must be &gt;= 0</description>
+        <errorConditionFormula>OR(
+   Qty__c &lt; 1,
+   Sale_Price__c &lt; 0
+)</errorConditionFormula>
+        <errorMessage>Quantity must be &gt;= 1 and Sale Price must be &gt;= 0. 
+Please enter valid Quantity and Sale Price and submit the form again.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>isSortOrderValid</fullName>
+        <active>true</active>
+        <errorConditionFormula>Sort_Order__c &lt; 1</errorConditionFormula>
+        <errorDisplayField>Sort_Order__c</errorDisplayField>
+        <errorMessage>Invalid sort number</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Add_Bundle_Line_Item</fullName>
+        <availability>online</availability>
+        <description>Add or Edit Bundle Line Item</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Add or Edit</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+var status = &apos;{!Product_Bundle__c.Status__c}&apos;; 
+//alert(status); 
+
+if(status==&apos;Approved&apos; || status==&apos;In Review&apos;){ 
+   alert(&apos;Approved Bundles cannot be modified, please create new Bundle or clone from an existing one.\n\nPlease contact your System Administrator for further assistance.&apos;); 
+} 
+else{
+   window.top.location.href = &apos;/apex/sfcloud__ProductBundle_Page?retURL={!Product_Bundle__c.Id}&amp;wrapMassAction=1&amp;scontrolCaching=1&amp;id={!Product_Bundle__c.Id}&amp;action=AddEdit&apos;; 
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Delete</fullName>
+        <availability>online</availability>
+        <description>Remove selected Product/Service from the Bundle</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Delete</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+var status = &apos;{!Product_Bundle__c.Status__c}&apos;; 
+//alert(status); 
+
+if(status==&apos;Approved&apos; || status==&apos;In Review&apos;){ 
+   alert(&apos;Approved Bundles cannot be modified, please create new Bundle or clone from an existing one.\n\nPlease contact your System Administrator for further assistance.&apos;); 
+} 
+else{ 
+   //Get records selected by the user
+   var selectedRecords= {!GETRECORDIDS( $ObjectType.Product_Line_Item__c)}; 
+
+   if (selectedRecords[0] == null) { 
+      alert(&quot;Please select record(s) to delete. Select Action to select all records.&quot;) 
+   } 
+   else { 
+      //alert(selectedRecords);
+      if(confirm(&apos;This action will remove selected line items. \nAre you sure?&apos;)) { 
+       
+         //Construct VF URL 
+         var queryString = new Array(); 
+         queryString[0] = &apos;{!Product_Bundle__c.Id}&apos;; 
+         queryString[1] = &apos;Delete&apos;; 
+         //Replace all comma with hyphen for selectedRecords var, because the code splits queryString by comma, and selectedRecords by hypen 
+         queryString[2] = selectedRecords.toString().replace(/,/g, &quot;-&quot;); 
+
+         var deleteLineItems= &apos;/apex/sfcloud__ProductBundle_ListButton?queryString=&apos; + queryString ; 
+
+         //Redirect to VF to delete line items
+        window.top.location.href = deleteLineItems;
+
+      }
+   }
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Edit_All</fullName>
+        <availability>online</availability>
+        <description>Edit Bundle line items</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Edit All (deprecated)</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+var status = &apos;{!Product_Bundle__c.Status__c}&apos;; 
+//alert(status); 
+var lineitems= &apos;{!Product_Bundle__c.Has_Line_Item__c}&apos;; 
+//alert(lineitems); 
+
+if(status==&apos;Approved&apos; || status==&apos;In Review&apos;){ 
+   alert(&apos;Approved Bundles cannot be modified, please create new Bundle or clone from an existing one.\n\nPlease contact your System Administrator for further assistance.&apos;); 
+} 
+else if(lineitems&lt;1){
+   alert(&apos;No line items to edit.&apos;);
+}
+else{ 
+   window.location = &apos;/apex/sfcloud__ProductBundle_Page?retURL={!Product_Bundle__c.Id}&amp;wrapMassAction=1&amp;scontrolCaching=1&amp;id={!Product_Bundle__c.Id}&amp;action=AddEdit&apos;; 
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Remove</fullName>
+        <availability>online</availability>
+        <description>Remove selected Product/Service from the Bundle</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Remove (deprecated)</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+//{!REQUIRESCRIPT(&quot;https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js&quot;)} 
+
+var status = &apos;{!Product_Bundle__c.Status__c}&apos;; 
+//alert(status); 
+
+if(status==&apos;Approved&apos; || status==&apos;In Review&apos;){ 
+   alert(&apos;Approved Bundles cannot be modified, please create new Bundle or clone from an existing one.\n\nPlease contact your System Administrator for further assistance.&apos;); 
+} 
+else{ 
+   //Get records selected by the user
+   var records = {!GETRECORDIDS( $ObjectType.Product_Line_Item__c)}; 
+
+   if (records[0] == null) { 
+      alert(&quot;Please select record(s) to remove. Select Action to select all records.&quot;) 
+   } 
+   else { 
+      //alert(records);
+
+      if(confirm(&apos;This action will remove selected line items. \nAre you sure?&apos;)) { 
+       
+         var message= sforce.apex.execute(&quot;sfcloud.ProductBundle_WebService&quot;,&quot;removeLineItems&quot;, 
+            { 
+               bundleId: &quot;{!Product_Bundle__c.Id}&quot;,
+               selectedRecords: &quot;&quot; + records + &quot;&quot;
+            } ); 
+         
+         if(message != &apos;&apos;) { 
+            alert(message);
+         }
+         else {
+            window.location.reload();
+         }
+      }
+   }
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Replace</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Replace</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+var status = &apos;{!Product_Bundle__c.Status__c}&apos;; 
+//alert(status); 
+
+if(status==&apos;Approved&apos; || status==&apos;In Review&apos;){ 
+   alert(&apos;Approved Bundles cannot be modified, please create new Bundle or clone from an existing one.\n\nPlease contact your System Administrator for further assistance.&apos;); 
+} 
+else{
+   //Get records selected by the user
+   var selectedRecords= {!GETRECORDIDS( $ObjectType.Product_Line_Item__c)}; 
+
+   if (selectedRecords[0] == null) { 
+      alert(&quot;Please select record(s) to replace. Select Action to select all records.&quot;) 
+   }
+   else{
+      window.top.location.href = &apos;/apex/sfcloud__ProductBundle_Page?retURL={!Product_Bundle__c.Id}&amp;wrapMassAction=1&amp;scontrolCaching=1&amp;selectedRecords=&apos; +selectedRecords+ &apos;&amp;id={!Product_Bundle__c.Id}&amp;action=Replace&apos;; 
+   }
+}</url>
+    </webLinks>
+</CustomObject>

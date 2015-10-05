@@ -1,0 +1,44 @@
+<apex:page controller="OBJCNVTR.manageFieldmap">
+    <apex:form ID="Form">
+        <apex:pageMessages rendered="{!NOT(AdminSetting.OBJCNVTR__Is_Admin__c)}" showDetail="false"></apex:pageMessages>
+        <apex:actionStatus Id="Status"  startText="{!$Label.objcnvtr__PGLBL_Processing}">
+            <apex:facet name="start">
+                <c:BluryBackground />
+            </apex:facet>
+        </apex:actionStatus>
+        <apex:pageBlock Id="PageBlock" rendered="{!AdminSetting.OBJCNVTR__Is_Admin__c}">
+        <apex:pageMessages rendered="true" showDetail="false"></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton id="btnNew" value="{!$Label.objcnvtr__BTNLBL_New}" Action="{!NewMap}" reRender="Form" status="Status"/>
+                <apex:commandButton id="btnView" value="{!$Label.objcnvtr__BTNLBL_View}" Action="{!ViewMap}" reRender="Form" status="Status"/>
+                <apex:commandButton id="btnEdit" value="{!$Label.objcnvtr__BTNLBL_Edit}" Action="{!EditMap}" reRender="Form" status="Status"/>
+                <apex:commandButton id="btnClone" value="{!$Label.objcnvtr__BTNLBL_Clone}" Action="{!CloneMap}" reRender="Form" status="Status"/>
+                <apex:commandButton id="btnDelete" value="{!$Label.objcnvtr__BTNLBL_Delete}" onclick="if(!confirm('{!$Label.objcnvtr__WARMSG_DeleteConfirmation}'))return false;" Action="{!DeleteMap}" reRender="Form" status="Status"/>
+                <apex:commandButton id="btnSetUpHome" value="Setup Home" Action="{!GoToSetUpHome}" reRender="Form" status="Status"/>
+                <apex:commandButton id="btnHome" value="{!$Label.objcnvtr__BTNLBL_Home}" Action="{!GoToHome}" reRender="Form" status="Status"/>
+            </apex:pageBlockButtons>
+                <apex:pageBlockTable value="{!lstFieldMap}" var="FieldMap">
+                    <apex:column style="Width:5%;">
+                        <apex:facet name="header" > </apex:facet>
+                        <apex:inputCheckbox value="{!FieldMap.OBJCNVTR__Select__c}"/>
+                    </apex:column>
+                    <apex:column style="Width:25%;">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_FieldMap}</apex:facet>
+                        <apex:OutputText value="{!FieldMap.OBJCNVTR__ID__c}"/>
+                    </apex:column>
+                    <apex:column style="Width:40%;">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_Description}</apex:facet>
+                        <apex:OutputText value="{!FieldMap.OBJCNVTR__Description__c}"/>
+                    </apex:column>
+                    <apex:column style="Width:15%;">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_SourceObject}</apex:facet>
+                        <apex:OutputText value="{!FieldMap.OBJCNVTR__Source_Value__c}"/>
+                    </apex:column>
+                    <apex:column style="Width:15%;">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_TargetObject}</apex:facet>
+                        <apex:OutputText value="{!FieldMap.OBJCNVTR__Target_Value__c}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,586 @@
+<apex:page action="{!initPage}" controller="sfcloud.ProductBundle_AddController" sidebar="false" title="Add Bundles and Products to {!sObjName}"> 
+
+    <head>
+        <script type='text/javascript'>
+            function noEnter(e)  {
+                if (window.event && window.event.keyCode == 13 || e.which == 13) {
+                    getItems(); 
+                    return false;
+                } else {
+                    return true;
+                }
+            } 
+        </script>
+        <style>
+            .error { color: red; font-weight: strong; font-size: 1.3em; }
+            .error1 { color: red; font-weight: strong; font-size: 1.1em; }
+            .bold { color: black; font-size: 1.5em; }
+            .bold1 { font-weight: bold; font-size: 1em; }
+            div.tooltip { width: 50px; float: left; }
+            /*div.tooltip:hover { background: #ffffff; text-decoration: none; } BG color is a must for IE6*/
+            div.tooltip span { display: none; padding: 1px; width: 50px; margin-left: -250px}
+            div.tooltip:hover span { display: inline; position: absolute; background: #8AC007; width: 500px; z-index: 1000; }
+            tr.tooltip_header { font-size: 1.2em; }
+            tr.tooltip_rows { font-weight: normal; font-size: 1em; }
+        </style>
+    </head>
+    
+    <apex:pageMessages id="messages" escape="false" />
+    <br/>
+     
+    <table style="width: 100%">
+        <tbody>
+            <tr>
+                <td style="width: 550px" class="error1">
+                    Click <a href="/{!id}" title="Go back to the {!sObjName}">here</a> to go back to the {!sObjName}.                               
+                </td>
+                <td style="text-align: right;">
+                    <a href="https://appexchange.salesforce.com/listingDetail?listingId=a0N30000007r2QFEAY&tab=r" target="_blank" class="helpLink" title="Rate this app (New Window)">Rate this app</a> | 
+                    <a href="/apex/ProductBundle_Documentation" target="_blank" class="helpLink" title="Help for this Page (New Window)">
+                        {!$ObjectType.sfcloud__Product_Bundle__c.Label} Help 
+                    <img src="/s.gif" alt="" class="helpIcon" />
+                    </a>
+                </td>
+            </tr>
+        </tbody> 
+    </table>
+    
+    <br/><br/>
+    
+    <apex:form >    
+        <!-- Search Bundle/Products -->
+        <apex:outputPanel id="pnlSearch" rendered="{!NOT(ISNULL(sObj['Pricebook2Id']))}">
+            <apex:outputLabel value="Search {!$ObjectType.sfcloud__Product_Bundle__c.LabelPlural} and {!$ObjectType.Product2.LabelPlural}" styleClass="bold" />
+            <apex:pageBlock tabStyle="Opportunity">
+                <table style="border-spacing:0; border-collapse:collapse;">
+                    <tbody>
+                        <tr>
+                            <td><span class="bold1">By Keyword</span></td>
+                            <td><span class="bold1">By Picklist</span></td>
+                            <td style="display:{!IF(cs.sfcloud__Display_Advance_Filters__c, '', 'none')};"><span class="bold1">By Field Filter</span></td>
+                            <td style="display:{!IF(cs.sfcloud__Display_Sort_By__c, '', 'none')};"><span class="bold1">Sort By</span></td>
+                        </tr>
+                        
+                        
+                        <!-- Product filter fields -->
+                        <tr>
+                            <!-- Keyword -->
+                            <td>
+                                <apex:inputText value="{!searchBundle}" onkeypress="return noEnter(event);" title="Search by {!$ObjectType.sfcloud__Product_Bundle__c.Fields.Name.Label}" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>     
+                            
+                            <!-- Picklist fields --> 
+                            <td>               
+                                <apex:repeat value="{!prodPicklistFields}" var="f">      
+                                    <apex:inputField id="prodPicklist" value="{!dummyProd[f.fieldPath]}" onchange="getItems()" />
+                                    <script type="text/javascript">  
+                                        //Get select option
+                                        objSelect=document.getElementById('{!JSINHTMLENCODE($Component.prodPicklist)}');
+                                        //Picklist: Replace '--None--' with field label
+                                        if(objSelect.options[0].text=='--None--'){
+                                            objSelect.options[0].text = '--{!f.Label}--';  
+                                            objSelect.options[0].selected= 'selected';  
+                                        }                                     
+                                        //MultiSelect: Replace 'Available' with field label
+                                        else{
+                                            var optgroup = document.getElementsByTagName('optgroup');
+                                            if(optgroup[0].label=='Available')
+                                                optgroup[0].label='{!f.Label}';  
+                                        }
+                                    </script>
+                                </apex:repeat>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
+                            
+                            <!-- Field filter -->          
+                            <td style="background-color:#FFFFCD; display:{!IF(cs.Display_Advance_Filters__c, '', 'none')};">
+                                <apex:selectList value="{!prodfilterField}" size="1" title="Filter By" style="width:150px">
+                                    1:&nbsp;<apex:selectOptions value="{!ProdFilterFields}"/>
+                                </apex:selectList>
+                                <apex:selectList value="{!prodFilterOp}" multiselect="false" size="1" title="Filter Operator">                               
+                                    <apex:selectOption itemValue="" itemLabel="--- None ---" />
+                                    <apex:selectOption itemValue="s" itemLabel="starts with" />
+                                    <apex:selectOption itemValue="e" itemLabel="equals" />
+                                    <apex:selectOption itemValue="n" itemLabel="not equal to" />
+                                    <apex:selectOption itemValue="c" itemLabel="contains" />
+                                    <apex:selectOption itemValue="k" itemLabel="does not contain" />
+                                </apex:selectList> 
+                                <apex:inputText value="{!prodFilterValue}" onkeypress="return noEnter(event);" title="Filter Value" />
+                                <apex:outputLink value="#" rendered="{!NOT(showProdAdvanceFilters)}">More filters &gt;&gt;
+                                    <apex:actionSupport event="onclick" action="{!toggleProdAdvanceFilters}" rerender="pnlSearch"/>
+                                </apex:outputLink>               
+                                &nbsp;&nbsp;&nbsp;&nbsp;  
+                            </td>
+                            
+                            <!-- Sort by -->
+                            <td style="display:{!IF(cs.sfcloud__Display_Sort_By__c, '', 'none')};">                                
+                                <apex:selectList value="{!prodSortField}" size="1" title="Sort By" style="width:150px">
+                                    <apex:selectOptions value="{!ProdSortFields}"/>
+                                </apex:selectList>
+                                <apex:selectList value="{!prodSortOp}" multiselect="false" size="1" title="Sort Operator">
+                                    <apex:selectOption itemValue=" " itemLabel="--- None ---" />
+                                    <apex:selectOption itemValue="asc" itemLabel="Ascending" />
+                                    <apex:selectOption itemValue="desc" itemLabel="Descending" />
+                                </apex:selectList>
+                            </td> 
+                        </tr>   
+                        
+                        <!-- Advance product filters 2-6 -->
+                        <apex:variable var="i" value="{!1}"/>
+                        <apex:repeat value="{!wProdFilters}" var="f" rendered="{!showProdAdvanceFilters}"> 
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td style="background-color:#FFFFCD;">
+                                    <apex:selectList value="{!f.field}" size="1" title="Filter By" style="width:150px">
+                                        {!i+1}&nbsp;<apex:selectOptions value="{!ProdFilterFields}"/>
+                                    </apex:selectList>
+                                    <apex:selectList value="{!f.op}" multiselect="false" size="1" title="Filter Operator">                               
+                                        <apex:selectOption itemValue="" itemLabel="--- None ---" />
+                                        <apex:selectOption itemValue="s" itemLabel="starts with" />
+                                        <apex:selectOption itemValue="e" itemLabel="equals" />
+                                        <apex:selectOption itemValue="n" itemLabel="not equal to" />
+                                        <apex:selectOption itemValue="c" itemLabel="contains" />
+                                        <apex:selectOption itemValue="k" itemLabel="does not contain" />
+                                    </apex:selectList> 
+                                    <apex:inputText value="{!f.value}" onkeypress="return noEnter(event);" title="Filter Value" />
+                                    <apex:outputLink value="#" rendered="{!i==5}">Fewer filters &lt;&lt;
+                                        <apex:actionSupport event="onclick" action="{!toggleProdAdvanceFilters}" rerender="pnlSearch"/>
+                                    </apex:outputLink> 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td></td>
+                            </tr> 
+                            <apex:variable var="i" value="{!i+1}"/>
+                        </apex:repeat>
+                        
+                        <!-- Product filter logic -->
+                        <tr style="display:{!IF(showProdAdvanceFilters, '', 'none')};">
+                            <td></td>
+                            <td></td>
+                            <td style="background-color:#FFFFCD;">
+                                <span class="bold1">{!$ObjectType.Product2.Label} Filter Logic:&nbsp;&nbsp;</span>
+                                <apex:inputText id="prodFilterLogic" value="{!prodFilterLogic}" size="40" title="Example: (1 OR 2) AND 3" styleClass="{!IF(errorProdFilterLogic!='', 'error', '')}" onkeypress="return noEnter(event);"/><br/>                               
+                                <div style="color:#c0272b; display: block;">{!errorProdFilterLogic}</div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        
+                        <!-- Bundle filter fields -->
+                        <tr>
+                            <td>
+                                <apex:commandButton value="Search" title="Find {!$ObjectType.sfcloud__Product_Bundle__c.LabelPlural} and {!$ObjectType.Product2.LabelPlural}" action="{!getItems}" reRender="pnlConfigure, messages" status="loading0" /> 
+                                &nbsp;&nbsp; 
+                                <apex:actionFunction name="getItems" action="{!getItems}" reRender="pnlSearch, pnlConfigure, pnlConfigureProduct, messages" status="loading0" /> 
+                                <b><apex:actionStatus id="loading0" startText="loading..." /></b>
+                            </td>  
+                            
+                            <!-- Picklist fields --> 
+                            <td style="display:{!IF(AND(cs.sfcloud__Display_Bundle_Section__c, cs.Display_Advance_Filters__c), '', 'none')};">               
+                                <apex:repeat value="{!bundlePicklistFields}" var="f">      
+                                    <apex:inputField id="bundlePicklist" value="{!dummyBundle[f.fieldPath]}" onchange="getItems()" />
+                                    <script type="text/javascript">  
+                                        //Get select option
+                                        objSelect=document.getElementById('{!JSINHTMLENCODE($Component.bundlePicklist)}');
+                                        //Picklist: Replace '--None--' with field label
+                                        if(objSelect.options[0].text=='--None--'){
+                                            objSelect.options[0].text = '--{!f.Label}--';  
+                                            objSelect.options[0].selected= 'selected';  
+                                        }                                     
+                                        //MultiSelect: Replace 'Available' with field label
+                                        else{
+                                            var optgroup = document.getElementsByTagName('optgroup');
+                                            if(optgroup[0].label=='Available')
+                                                optgroup[0].label='{!f.Label}';  
+                                        }
+                                    </script>
+                                </apex:repeat>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
+                            
+                            <!-- Filed filter -->                      
+                            <td style="background-color:#D1E5FA; display:{!IF(AND(cs.sfcloud__Display_Bundle_Section__c, cs.Display_Advance_Filters__c), '', 'none')};">
+                                <apex:selectList value="{!filterField}" size="1" title="Filter By" style="width:150px">
+                                    1:&nbsp;<apex:selectOptions value="{!FilterFields}"/>
+                                </apex:selectList>
+                                <apex:selectList value="{!filterOp}" multiselect="false" size="1" title="Filter Operator">                               
+                                    <apex:selectOption itemValue="" itemLabel="--- None ---" />
+                                    <apex:selectOption itemValue="s" itemLabel="starts with" />
+                                    <apex:selectOption itemValue="e" itemLabel="equals" />
+                                    <apex:selectOption itemValue="n" itemLabel="not equal to" />
+                                    <apex:selectOption itemValue="c" itemLabel="contains" />
+                                    <apex:selectOption itemValue="k" itemLabel="does not contain" />
+                                </apex:selectList> 
+                                <apex:inputText value="{!filterValue}" onkeypress="return noEnter(event);" title="Filter Value" />
+                                <apex:outputLink value="#" rendered="{!NOT(showBundleAdvanceFilters)}">More filters &gt;&gt;
+                                    <apex:actionSupport event="onclick" action="{!toggleBundleAdvanceFilters}" rerender="pnlSearch"/>
+                                </apex:outputLink>   
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            </td>
+                            
+                            <!-- Sort by -->
+                            <td style="display:{!IF(AND(cs.sfcloud__Display_Bundle_Section__c, cs.sfcloud__Display_Sort_By__c), '', 'none')};">                                
+                                <apex:selectList value="{!sortField}" size="1" title="Sort By" style="width:150px">
+                                    <apex:selectOptions value="{!SortFields}"/>
+                                </apex:selectList>
+                                <apex:selectList value="{!sortOp}" multiselect="false" size="1" title="Sort Operator">
+                                    <apex:selectOption itemValue=" " itemLabel="--- None ---" />
+                                    <apex:selectOption itemValue="asc" itemLabel="Ascending" />
+                                    <apex:selectOption itemValue="desc" itemLabel="Descending" />
+                                </apex:selectList>
+                            </td>
+                        </tr>
+                        
+                        <!-- Advance bundle filters 2-6 -->
+                        <apex:variable var="i" value="{!1}"/>
+                        <apex:repeat value="{!wBundleFilters}" var="f" rendered="{!showBundleAdvanceFilters}"> 
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td style="background-color:#D1E5FA;">
+                                    <apex:selectList value="{!f.field}" size="1" title="Filter By" style="width:150px">
+                                        {!i+1}&nbsp;<apex:selectOptions value="{!FilterFields}"/>
+                                    </apex:selectList>
+                                    <apex:selectList value="{!f.op}" multiselect="false" size="1" title="Filter Operator">                               
+                                        <apex:selectOption itemValue="" itemLabel="--- None ---" />
+                                        <apex:selectOption itemValue="s" itemLabel="starts with" />
+                                        <apex:selectOption itemValue="e" itemLabel="equals" />
+                                        <apex:selectOption itemValue="n" itemLabel="not equal to" />
+                                        <apex:selectOption itemValue="c" itemLabel="contains" />
+                                        <apex:selectOption itemValue="k" itemLabel="does not contain" />
+                                    </apex:selectList> 
+                                    <apex:inputText value="{!f.value}" onkeypress="return noEnter(event);" title="Filter Value" />
+                                    <apex:outputLink value="#" rendered="{!i==5}">Fewer filters &lt;&lt;
+                                        <apex:actionSupport event="onclick" action="{!toggleBundleAdvanceFilters}" rerender="pnlSearch"/>
+                                    </apex:outputLink> 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                </td>
+                                <td></td>
+                            </tr> 
+                            <apex:variable var="i" value="{!i+1}"/>
+                        </apex:repeat>
+                        
+                        <!-- Bundle filter logic -->
+                        <tr style="display:{!IF(showBundleAdvanceFilters, '', 'none')};">
+                            <td></td>
+                            <td></td>
+                            <td style="background-color:#D1E5FA;">
+                                <span class="bold1">{!$ObjectType.Product_Bundle__c.Label} Filter Logic:&nbsp;&nbsp;</span>
+                                <apex:inputText id="bundleFilterLogic" value="{!bundleFilterLogic}" size="40" title="Example: (1 OR 2) AND 3" styleClass="{!IF(errorBundleFilterLogic!='', 'error', '')}" onkeypress="return noEnter(event);"/><br/>                               
+                                <div style="color:#c0272b; display: block;">{!errorBundleFilterLogic}</div>
+                            </td>
+                            <td></td>
+                        </tr>
+                                                          
+                    </tbody> 
+                </table>
+            </apex:pageBlock>
+            <br />
+            <apex:outputLabel id="errorMsgTop" value="{!errorMessage}" styleClass="error" title="Error" /> 
+            <br/>
+        </apex:outputPanel>
+        
+        
+        <!-- Select and Configure Bundles/Products -->   
+        <apex:outputPanel id="pnlConfigure">   
+            <apex:outputPanel rendered="{!bundleSize=0 || prodSize=0}" >  
+                <apex:outputLabel value="No {!$ObjectType.sfcloud__Product_Bundle__c.Label} found" rendered="{!AND(cs.sfcloud__Display_Bundle_Section__c, bundleSize=0)}" styleClass="error" />
+                <br/>          
+                <apex:outputLabel value="No {!$ObjectType.Product2.Label} found" rendered="{!prodSize=0}" styleClass="error"/>
+                <br/>
+            </apex:outputPanel>
+            <apex:outputLabel value="Select and Configure" rendered="{!bundleSize>0 || prodSize>0}" styleClass="bold" />
+            <apex:pageBlock rendered="{!bundleSize>0 || prodSize>0}" tabStyle="Opportunity">
+
+                <apex:pageBlockButtons location="both">
+                    <apex:commandButton action="{!save}" value="Quick Save" reRender="pnlConfigure, errorMsgTop, errorMsgBottom" status="loading1">
+                        <apex:param name="quickSave" value="true" />
+                    </apex:commandButton>&nbsp;
+                    <apex:commandButton action="{!save}" value="Save" reRender="pnlConfigure, errorMsgTop, errorMsgBottom" status="loading1"/>
+                    <b><apex:actionStatus id="loading1" startText="loading..."/></b><br/>
+                </apex:pageBlockButtons>
+                
+                <!-- Bundles -->        
+                <apex:pageBlockSection id="sectionBundle" title="{!$ObjectType.sfcloud__Product_Bundle__c.LabelPlural}" rendered="{!AND(cs.sfcloud__Display_Bundle_Section__c, bundleSize>0)}" columns="1">
+                    <apex:pageBlockSectionItem >
+                        <apex:pageBlockTable value="{!sortedKeys}" var="key"> 
+                            <apex:column width="40px">
+                                <apex:facet name="header">      
+                                    <apex:outputPanel >                             
+                                        <apex:inputCheckbox value="{!selectAllBundle}">                        
+                                            <apex:actionSupport event="onclick" action="{!selectAll}" reRender="sectionBundle" status="loading2"> 
+                                                <apex:param name="section" value="bundle" />
+                                            </apex:actionSupport>
+                                        </apex:inputCheckbox>                                       
+                                        <apex:actionStatus id="loading2" startText="..." /> 
+                                    </apex:outputPanel>
+                                </apex:facet>
+                                <apex:inputCheckbox value="{!wBundle[key].selected}">
+                                    <apex:actionSupport event="onclick" action="{!toggleBundleItems}" rerender="sectionBundle" >
+                                        <apex:param name="itemId" value="{!key}" />
+                                    </apex:actionSupport>
+                                </apex:inputCheckbox>
+                            </apex:column>
+                            <apex:column headerValue="Name" width="200px">
+                                <apex:outputLink value="/{!key}" target="_blank" title="{!wBundle[key].pb.sfcloud__Bundle_Items__c}">{!wBundle[key].pb.Name}</apex:outputLink>
+                            </apex:column>
+                            <apex:column headerValue="{!$ObjectType.sfcloud__Product_Bundle__c.Fields.sfcloud__Description__c.Label}" width="400px">
+                                <apex:inputTextarea value="{!wBundle[key].description}" style="width:400px;" rendered="{!AND(cs.sfcloud__Can_edit_Description__c, wBundle[key].selected)}">
+                                    <apex:actionSupport event="onchange" action="{!configureItems}" rerender="sectionBundleItem" status="loading3">
+                                        <apex:param name="itemId" value="{!key}" />
+                                        <apex:param name="field" value="bundleDescription" /> 
+                                    </apex:actionSupport>
+                                </apex:inputTextarea>
+                               	<apex:actionStatus id="loading3" startText=" ..." /> 
+                                <apex:outputField value="{!wBundle[key].pb.sfcloud__Description__c}" style="width:400px;" rendered="{!NOT(AND(cs.sfcloud__Can_edit_Description__c, wBundle[key].selected))}" />
+                            </apex:column>            
+                            <apex:column headerValue="{!$ObjectType.OpportunityLineItem.Fields.Quantity.Label}" rendered="{!cs.sfcloud__Can_edit_Quantity__c}"> 
+                                <apex:inputText value="{!wBundle[key].quantity}" style="width:50px">
+                                    <apex:actionSupport event="onchange" action="{!configureItems}" rerender="sectionBundleItem" status="loading4">
+                                        <apex:param name="itemId" value="{!key}" />
+                                        <apex:param name="field" value="bundleQuantity" /> 
+                                    </apex:actionSupport>
+                                </apex:inputText>
+                               	<apex:actionStatus id="loading4" startText=" ..." /> 
+                            </apex:column>    
+                            <apex:column headerValue="{!$ObjectType.sfcloud__Product_Bundle__c.Fields.sfcloud__List_Price__c.Label}" width="100px">
+                                <apex:outputField value="{!wBundle[key].pb.sfcloud__List_Price__c}" />
+                            </apex:column>          
+                            <apex:column headerValue="{!$ObjectType.sfcloud__Product_Bundle__c.Fields.sfcloud__Sale_Price__c.Label}" width="100px">
+                                <apex:outputField value="{!wBundle[key].pb.sfcloud__Sale_Price__c}" />
+                            </apex:column>  
+                            <apex:column headerValue="{!$ObjectType.sfcloud__Product_Bundle__c.Fields.sfcloud__Discount__c.Label}" rendered="{!cs.sfcloud__Can_edit_Price__c}">
+                                <apex:inputText value="{!wBundle[key].discount}" style="width:50px">    
+                                    <apex:actionSupport event="onchange" action="{!configureItems}" rerender="sectionBundleItem" status="loading5">
+                                        <apex:param name="itemId" value="{!key}" />
+                                        <apex:param name="field" value="bundleDiscount" /> 
+                                    </apex:actionSupport>
+                                </apex:inputText>      
+                               	<apex:actionStatus id="loading5" startText=" ..." /> 
+                            </apex:column>     
+                            
+                            <!-- Field Sets -->
+                            <apex:repeat value="{!bundle_fieldSet}" var="f">       
+                                <apex:column headerValue="{!f.Label}">
+                                    <apex:inputField value="{!wBundle[key].pb[f.fieldPath]}" required="{!OR(f.required, f.dbrequired)}">
+                                        <apex:actionSupport event="onchange" action="{!configureItems}" rerender="sectionBundleItem" >
+                                            <apex:param name="itemId" value="{!key}" />
+                                            <apex:param name="field" value="{!f}" /> 
+                                        </apex:actionSupport>
+                                    </apex:inputField>
+                                </apex:column>
+                            </apex:repeat> 
+                                                        
+                            
+                            <!-- Bundle Line Items -->
+                            <apex:column breakBefore="true" colspan="{!colSpan}">  
+                                <apex:pageBlockSection id="sectionBundleItem" title="{!$ObjectType.sfcloud__Product_Line_Item__c.LabelPlural}" columns="1" rendered="{!wBundle[key].selected}"> 
+                                    <apex:pageBlockSectionItem > 
+                                        <apex:pageBlockTable value="{!wBundleItems[key]}" var="item"> 
+                                            <apex:column width="40px"/>
+                                            <apex:column headerValue="Select" width="40px">
+                                                <apex:inputCheckbox value="{!item.selected}" />
+                                            </apex:column>
+                                            <apex:column headerValue="{!$ObjectType.Product2.Fields.sfcloud__Image__c.Label}" width="90px" rendered="{!cs.sfcloud__Display_Image__c}">
+                                                <apex:image value="{!item.imageURL}" title="{!item.pli.sfcloud__Product_Name__c}" alt="{!item.pli.sfcloud__Product_Name__c}" width="75" height="75" rendered="{!item.imageURL!=''}"/>   
+                                                <apex:outputText value="Image Unavailable" rendered="{!item.imageURL==''}"/>                                   
+                                            </apex:column>
+                                            <apex:column headerValue="Name" width="200px">
+                                                <apex:outputLink value="/{!item.pli.sfcloud__Product_Name__c}" target="_blank" title="Opens in new window">{!item.pli.sfcloud__Product_Name__r.Name}</apex:outputLink>
+                                            </apex:column>                                            
+                                            <apex:column headerValue="{!$ObjectType.Product2.Fields.Description.Label}" width="400px"> 
+                                                <apex:inputTextarea value="{!item.description}" rows="2" style="width:400px;" rendered="{!AND(cs.sfcloud__Can_edit_Description__c, item.selected)}" />
+                                                <apex:outputField value="{!item.pli.sfcloud__Line_Item_Description__c}" style="width:400px;" rendered="{!NOT(AND(cs.sfcloud__Can_edit_Description__c, item.selected))}" />
+                                            </apex:column>                                  
+                                            <apex:column headerValue="{!$ObjectType.Product2.Fields.sfcloud__Product_Cost__c.Label}" width="100px" rendered="{!cs.sfcloud__Display_Cost_and_Margin__c}">
+                                                <apex:outputField value="{!item.pli.sfcloud__Product_Cost__c}" /> 
+                                            </apex:column>             
+                                            <apex:column headerValue="{!$ObjectType.sfcloud__Product_Line_Item__c.Fields.sfcloud__Qty__c.Label}">                                                 
+                                                <div class="requiredInput">
+                                                    <div class="requiredBlock"></div>
+                                                    <apex:inputText value="{!item.quantity}" style="width:50px;" rendered="{!cs.sfcloud__Can_edit_Quantity__c}">
+                                                        <apex:actionSupport event="onchange" action="{!configureItems}" rerender="{!$Component.bliSubTotal}, {!$Component.bliTotalPrice}"> 
+                                                            <apex:param name="itemId" value="{!key}" />
+                                                            <apex:param name="field" value="itemQuantity" />
+                                                        </apex:actionSupport>
+                                                    </apex:inputText>
+                                                    <apex:outputField value="{!item.pli.sfcloud__Qty__c}" rendered="{!NOT(cs.sfcloud__Can_edit_Quantity__c)}" />
+                                                </div>
+                                            </apex:column>   
+                                            <apex:column headerValue="{!$ObjectType.sfcloud__Product_Line_Item__c.Fields.sfcloud__List_Price__c.Label}" width="100px">
+                                                <apex:outputField value="{!item.pli.sfcloud__List_Price__c}" style="width:100px;" />
+                                            </apex:column>                           
+                                            <apex:column id="bliPrice" headerValue="{!$ObjectType.sfcloud__Product_Line_Item__c.Fields.sfcloud__Sale_Price__c.Label}" width="100px">
+                                                <div class="requiredInput">
+                                                    <div class="requiredBlock"></div>
+                                                    <apex:inputText value="{!item.salePrice}" style="width:100px;" rendered="{!AND(cs.sfcloud__Can_edit_Price__c, item.selected)}">
+                                                        <apex:actionSupport event="onchange" action="{!configureItems}" reRender="{!$Component.bliDiscount}, {!$Component.bliMargin}, {!$Component.bliSubTotal}, {!$Component.bliTotalPrice}">
+                                                            <apex:param name="itemId" value="{!key}" />
+                                                            <apex:param name="field" value="itemPrice" /> 
+                                                        </apex:actionSupport>
+                                                    </apex:inputText>
+                                                    <apex:outputField value="{!item.pli.sfcloud__Sale_Price__c}" rendered="{!NOT(AND(cs.sfcloud__Can_edit_Price__c, item.selected))}" />
+                                                </div>
+                                            </apex:column>                                  
+                                            <apex:column id="bliSubTotal" headerValue="{!$ObjectType.OpportunityLineItem.Fields.Subtotal.Label}" width="150px" rendered="{!NOT(cs.sfcloud__Discount_changes_Sale_Price__c)}">
+                                                <apex:outputText value="{!item.subTotal}" />
+                                            </apex:column>            
+                                            <apex:column id="bliDiscount" headerValue="{!$ObjectType.sfcloud__Product_Line_Item__c.Fields.sfcloud__Discount__c.Label}"> 
+                                                <div class="requiredInput">
+                                                    <div class="requiredBlock"></div>
+                                                    <apex:inputText value="{!item.discount}" style="width:50px" rendered="{!AND(cs.sfcloud__Can_edit_Price__c, item.selected)}">
+                                                        <apex:actionSupport event="onchange" action="{!configureItems}" rerender="{!$Component.bliPrice}, {!$Component.bliMargin}, {!$Component.bliSubTotal}, {!$Component.bliTotalPrice}"> 
+                                                            <apex:param name="itemId" value="{!key}" />
+                                                            <apex:param name="field" value="itemDiscount" />
+                                                        </apex:actionSupport>
+                                                    </apex:inputText>    
+                                                    <apex:outputField value="{!item.pli.sfcloud__Discount__c}" rendered="{!NOT(AND(cs.sfcloud__Can_edit_Price__c, item.selected))}" />
+                                                </div>
+                                            </apex:column>                                            
+						                    <apex:column id="bliMargin" headerValue="{!$ObjectType.sfcloud__Product_Line_Item__c.Fields.sfcloud__Margin__c.Label}" rendered="{!cs.sfcloud__Display_Cost_and_Margin__c}">
+						                        <apex:inputText value="{!item.margin}" style="width:100px;" rendered="{!AND(cs.sfcloud__Can_edit_Price__c, item.selected)}">
+						                        	<apex:actionSupport event="onchange" action="{!configureItems}" rerender="{!$Component.bliPrice}, {!$Component.bliMargin}, {!$Component.bliDiscount}, {!$Component.bliSubTotal}, {!$Component.bliTotalPrice}"> 
+						                                <apex:param name="itemId" value="{!key}" />
+						                                <apex:param name="field" value="itemMargin" />
+						                            </apex:actionSupport>
+						                        </apex:inputText>
+                                                <apex:outputField value="{!item.pli.sfcloud__Margin__c}" rendered="{!NOT(AND(cs.sfcloud__Can_edit_Price__c, item.selected))}" />
+						                    </apex:column>
+                                            <apex:column id="bliTotalPrice" headerValue="{!$ObjectType.sfcloud__Product_Line_Item__c.Fields.sfcloud__Total_Price__c.Label}" width="150px">
+                                                <apex:outputText value="{!item.totalPrice}" />
+                                            </apex:column>
+                                                                                      
+                                            <!-- Field Set -->
+                                            <apex:repeat value="{!lineItem_fieldSet}" var="f">
+                                                <apex:column headerValue="{!f.Label}">
+                                                    <apex:inputField value="{!item.pli[f.fieldPath]}" required="{!OR(f.required, f.dbrequired)}"  />
+                                                </apex:column> 
+                                            </apex:repeat>      
+
+                                        </apex:pageBlockTable>
+                                    </apex:pageBlockSectionItem>
+                                </apex:pageBlockSection>  
+                                <br/><br/>
+                                                            
+                            </apex:column>
+                                                        
+                        </apex:pageBlockTable>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <br/>
+                
+                <!-- Products -->
+                <apex:pageBlockSection id="sectionProducts" title="{!$ObjectType.Product2.LabelPlural}" rendered="{!prodSize>0}" columns="1">
+                    <apex:pageBlockSectionItem >
+                        <apex:pageBlockTable value="{!sortedProdKeys}" var="key"> 
+                                                
+                            <apex:column style="width:40px;">
+                                <apex:facet name="header">      
+                                    <apex:outputPanel > 
+                                        <apex:inputCheckbox value="{!selectAllProd}">                        
+                                            <apex:actionSupport event="onclick" action="{!selectAll}" reRender="sectionProducts" status="loading4"> 
+                                                <apex:param name="section" value="products" />
+                                            </apex:actionSupport>
+                                        </apex:inputCheckbox>
+                                        <apex:actionStatus id="loading4" startText="..." /> 
+                                    </apex:outputPanel>
+                                </apex:facet>
+                                <apex:inputCheckbox value="{!wBundle[key].selected}" />
+                            </apex:column>
+                            
+                            <apex:column headerValue="{!$ObjectType.Product2.Fields.sfcloud__Image__c.Label}" width="90px" rendered="{!cs.sfcloud__Display_Image__c}">
+                                <apex:image value="{!wBundle[key].imageURL}" title="{!wBundle[key].pbe.Name}" alt="{!wBundle[key].pbe.Name}" width="75" height="75" rendered="{!wBundle[key].imageURL!=''}"/>
+                                <apex:outputText value="Image Unavailable" rendered="{!wBundle[key].imageURL==''}"/>                   
+                            </apex:column>
+                            <apex:column headerValue="Name" width="200px">
+                                <apex:outputLink value="/{!wBundle[key].pbe.Product2Id}" target="_blank" title="{!wBundle[key].pbe.Name}">{!wBundle[key].pbe.Name}</apex:outputLink>
+                            </apex:column>
+                            <apex:column headerValue="{!$ObjectType.Product2.Fields.Description.Label}" width="400px">
+                                <apex:outputText value="{!wBundle[key].description}" />
+                            </apex:column>
+                            <apex:column headerValue="{!$ObjectType.Product2.Fields.Family.Label}" width="150px">
+                                <apex:outputField value="{!wBundle[key].pbe.Product2.Family}" />
+                            </apex:column>
+                            <apex:column headerValue="{!$ObjectType.Product2.Fields.sfcloud__Product_Cost__c.Label}" width="100px" rendered="{!cs.sfcloud__Display_Cost_and_Margin__c}">
+                                <apex:outputField value="{!wBundle[key].pbe.Product2.sfcloud__Product_Cost__c}" />
+                            </apex:column>    
+                            <apex:column id="prodQuantity" headerValue="{!$ObjectType.OpportunityLineItem.Fields.Quantity.Label}">      
+                                 <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <apex:inputText value="{!wBundle[key].quantity}" style="width:50px;">                                        
+                                        <apex:actionSupport event="onchange" action="{!tieredPricing}" rerender="{!$Component.prodSalePrice}, {!$Component.prodDiscount}, {!$Component.prodQuantity}, {!$Component.prodMargin}, {!$Component.prodSubTotal}, {!$Component.prodTotalPrice}"> 
+                                            <apex:param name="itemId" value="{!key}" />
+                                            <apex:param name="field" value="itemQuantity" />
+                                        </apex:actionSupport>                                       
+                                    </apex:inputText>     
+                                </div>                                 
+                                <!-- Tooltip for volume pricing -->
+                                <apex:outputPanel rendered="{!NOT(ISNULL(wBundle[key].tieredPricing))}" style="color:#8AC007; font-size:12px; font-weight:bold">   
+                                    <div class="tooltip">
+                                        {!wBundle[key].tieredPricing.Name}
+                                        <span>
+                                            <apex:outputtext value="{!wBundle[key].tieredMessage}" escape="false" />
+                                        </span>
+                                    </div>
+                                </apex:outputPanel>                              
+                            </apex:column>
+                            <apex:column headerValue="{!$ObjectType.OpportunityLineItem.Fields.ListPrice.Label}" width="100px">  
+                                <apex:outputField value="{!wBundle[key].pbe.UnitPrice}"/>
+                            </apex:column>
+                            <apex:column id="prodSalePrice" headerValue="{!$ObjectType.OpportunityLineItem.Fields.UnitPrice.Label}">                     
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div> 
+                                    <apex:inputText value="{!wBundle[key].salePrice}" style="width:100px;">
+                                        <apex:actionSupport event="onchange" action="{!configureItems}" rerender="{!$Component.prodDiscount}, {!$Component.prodMargin}, {!$Component.prodSubTotal}, {!$Component.prodTotalPrice}"> 
+                                            <apex:param name="itemId" value="{!key}" />
+                                            <apex:param name="field" value="itemPrice" />
+                                        </apex:actionSupport>
+                                    </apex:inputText>
+                                </div> 
+                            </apex:column>                            
+                            <apex:column id="prodSubTotal" headerValue="{!$ObjectType.OpportunityLineItem.Fields.Subtotal.Label}" rendered="{!NOT(cs.sfcloud__Discount_changes_Sale_Price__c)}">
+                                <apex:outputText value="{!wBundle[key].subTotal}" style="width:150px"/>
+                            </apex:column>
+                            <apex:column id="prodDiscount" headerValue="{!$ObjectType.OpportunityLineItem.Fields.Discount.Label}">                       
+                                <div class="requiredInput">
+                                    <div class="requiredBlock"></div>
+                                    <apex:inputText value="{!wBundle[key].discount}" style="width:50px">
+                                        <apex:actionSupport event="onchange" action="{!configureItems}" rerender="{!$Component.prodSalePrice}, {!$Component.prodMargin}, {!$Component.prodSubTotal}, {!$Component.prodTotalPrice}"> 
+                                            <apex:param name="itemId" value="{!key}" />
+                                            <apex:param name="field" value="itemDiscount" />
+                                        </apex:actionSupport>
+                                    </apex:inputText>    
+                                </div> 
+                            </apex:column>
+		                    <apex:column id="prodMargin" headerValue="{!$ObjectType.sfcloud__Product_Line_Item__c.Fields.sfcloud__Margin__c.Label}" rendered="{!cs.sfcloud__Display_Cost_and_Margin__c}">
+		                        <apex:inputText value="{!wBundle[key].margin}" style="width:100px;">
+		                        	<apex:actionSupport event="onchange" action="{!configureItems}" rerender="{!$Component.prodSalePrice}, {!$Component.prodDiscount}, {!$Component.prodMargin}, {!$Component.prodSubTotal}, {!$Component.prodTotalPrice}"> 
+		                                <apex:param name="itemId" value="{!key}" />
+		                                <apex:param name="field" value="itemMargin" />
+		                            </apex:actionSupport>
+		                        </apex:inputText>
+		                    </apex:column>  
+                            <apex:column id="prodTotalPrice" headerValue="{!$ObjectType.OpportunityLineItem.Fields.TotalPrice.Label}" width="150px">
+                                <apex:outputText value="{!wBundle[key].totalPrice}" />
+                            </apex:column>
+                            
+                            <!-- Field Set -->
+                            <apex:repeat value="{!prod_fieldSet}" var="f"> 
+                                <apex:column headerValue="{!f.Label}">
+                                    <apex:inputField value="{!wBundle[key].pbe.Product2[f.fieldPath]}" required="{!OR(f.required, f.dbrequired)}" />
+                                </apex:column>
+                            </apex:repeat>
+                            
+                        </apex:pageBlockTable>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>            
+            </apex:pageBlock>            
+            <apex:outputLabel id="errorMsgBottom" value="{!errorMessage}" styleClass="error" title="Error" />
+        </apex:outputPanel>
+        
+    </apex:form>
+    
+    <br/><br/><hr />
+    We are listening. Please <a title='sfsupport@adroitus.com' href='mailto:sfsupport@adroitus.com'><span class="helpLink">Email</span></a> us if you need any help customizing the app or need technical support. 
+</apex:page>

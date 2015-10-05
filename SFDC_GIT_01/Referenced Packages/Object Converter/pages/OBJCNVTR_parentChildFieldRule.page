@@ -1,0 +1,126 @@
+<apex:page controller="OBJCNVTR.parentChildFieldRule">
+    <apex:form ID="Form">
+        <apex:pageMessages rendered="{!NOT(AdminSetting.OBJCNVTR__Is_Admin__c)}" showDetail="false"></apex:pageMessages>
+        <apex:pageBlock id="PB" rendered="{!AdminSetting.OBJCNVTR__Is_Admin__c}">
+            <apex:pageMessages rendered="true" showDetail="false"></apex:pageMessages>
+            <apex:actionStatus startText="{!$Label.objcnvtr__PGLBL_Processing}" startStyle="display:Block" Id="Status">
+                <apex:facet name="start">
+                    <c:BluryBackground />
+                </apex:facet>
+            </apex:actionStatus>
+
+            <apex:actionFunction name="onSelectSourceObject" Action="{!SelectSourceObject}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onSelectTargetObject" Action="{!SelectTargetObject}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onSelectSourceChild" Action="{!SelectSourceChild}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onSelectTargetChild" Action="{!SelectTargetChild}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onSelectPostConvertAction" Action="{!SelectPostConvertAction}" status="Status" reRender="Form"/>
+            <apex:inputHidden id="selectedSourceChildObject" value="{!selectedSourceChildObject}"/>
+            <apex:inputHidden id="selectedTargetChildObject" value="{!selectedTargetChildObject}"/>
+                   
+            
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!SaveFieldMapping}" value="{!$Label.objcnvtr__BTNLBL_Save}" reRender="PB" status="Status" rendered="{!NOT(isViewMode)}"/>
+                <apex:commandButton action="{!QuickSaveFieldMapping}" value="{!$Label.objcnvtr__BTNLBL_QuickSave}" reRender="PB" status="Status" rendered="{!NOT(isViewMode)}"/>
+                <apex:commandButton action="{!EditMap}" value="{!$Label.objcnvtr__BTNLBL_Edit}" reRender="PB" status="Status" rendered="{!isViewMode}"/>
+                <apex:commandButton action="{!Cancel}" value="{!$Label.objcnvtr__BTNLBL_Cancel}" reRender="PB" status="Status"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_MapName}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:inputtext value="{!oFieldMap.OBJCNVTR__ID__c}" disabled="{!IsViewMode}"/>    
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_SourceObject}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Source_Value__c}" multiselect="false" size="1" onchange="onSelectSourceObject();" disabled="{!IsViewMode}">
+                            <apex:selectOptions value="{!lstSourceObject2}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_Description}</apex:outputText>
+                    <apex:inputtextarea value="{!oFieldMap.OBJCNVTR__Description__c}" disabled="{!IsViewMode}"/> 
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_TargetObject}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Target_Value__c}" multiselect="false" size="1" onchange="onSelectTargetObject();" disabled="{!IsViewMode}">
+                            <apex:selectOptions value="{!lstTargetObject2}"/>
+                        </apex:SelectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >Parent object field map</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Parent_Child_Field_Map__c}" multiselect="false" size="1" disabled="{!IsViewMode}">
+                            <apex:selectOptions value="{!lstParentFieldMap}"/>
+                        </apex:SelectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+               <apex:pageBlockSection >
+                <apex:pageBlockTable value="{!lstWrapperParentChildFieldRule}" var="x" id="DTable">
+                    <apex:column >
+                        <apex:facet name="header"></apex:facet>
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" >
+                            <apex:inputcheckbox value="{!x.isSelect}"/>
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Source child object</apex:facet>
+                        <apex:outputPanel layout="block" styleClass="requiredInput" >
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!x.ConfigData.OBJCNVTR__Source_Value__c}" multiselect="false" size="1" disabled="{!IsViewMode}" onChange="document.getElementById('{!$Component.selectedSourceChildObject}').value = '{!$Component.DTable}'; onSelectSourceChild();">
+                                <apex:selectOptions value="{!lstSourceObject2}"/>
+                            </apex:SelectList>
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Source object related field</apex:facet>
+                         <apex:outputPanel layout="block" styleClass="requiredInput" >
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!x.ConfigData.OBJCNVTR__Source_Related_Field__c}" multiselect="false" size="1" disabled="{!IsViewMode}">
+                                <apex:selectOptions value="{!x.lstSourceRelatedFields}"/>
+                            </apex:SelectList>
+                           </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Target child object</apex:facet>
+                         <apex:outputPanel layout="block" styleClass="requiredInput" >
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!x.ConfigData.OBJCNVTR__Target_Value__c}" multiselect="false" size="1" disabled="{!IsViewMode}" onChange="document.getElementById('{!$Component.selectedTargetChildObject}').value = '{!$Component.DTable}'; onSelectTargetChild();">
+                                <apex:selectOptions value="{!lstTargetObject2}"/>
+                            </apex:SelectList>
+                             </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Target object related field</apex:facet>
+                         <apex:outputPanel layout="block" styleClass="requiredInput" >
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!x.ConfigData.OBJCNVTR__Target_Related_Field__c}" multiselect="false" size="1" disabled="{!IsViewMode}">
+                                <apex:selectOptions value="{!x.lstTargetRelatedFields}"/>
+                            </apex:SelectList>
+                             </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">Child object map</apex:facet>
+                        <apex:outputPanel layout="block" styleClass="requiredInput" >
+                            <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                            <apex:selectList value="{!x.ConfigData.OBJCNVTR__Parent_Child_Field_Map__c}" multiselect="false" size="1" disabled="{!IsViewMode}">
+                                <apex:selectOptions value="{!x.lstFieldMaps}"/>
+                            </apex:SelectList>
+                        </apex:outputPanel>
+                    </apex:column>
+                </apex:pageBlockTable>
+             </apex:pageBlockSection>
+            <apex:commandButton action="{!AddDetail}" value="Add" reRender="PB" status="Status" rendered="{!NOT(isViewMode) && isAddAlowed}"/>
+            <apex:commandButton action="{!RemoveDetail}" value="Remove" reRender="PB" status="Status" rendered="{!NOT(isViewMode) && isRemoveAlowed}" />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

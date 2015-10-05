@@ -1,0 +1,5 @@
+<apex:page standardController="dsfs__DocuSign_Envelope_Recipient__c" Extensions="dsfs.DocuSignEnvelopeRecipientController"  action="{!DSDelete}"  tabStyle="dsfs__DocuSign_Status__c" id="DocuSignCreateEnvelopePage"> 
+
+
+
+</apex:page>

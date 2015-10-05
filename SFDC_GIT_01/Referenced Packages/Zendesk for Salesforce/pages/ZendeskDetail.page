@@ -1,0 +1,5 @@
+<apex:page controller="Zendesk.Zendesk">
+
+  <c:ZendeskDetail zendeskUrl="{!$Setup.ZendeskSession__c.url__c}" zendeskUser="{!$Setup.ZendeskSession__c.username__c}" zendeskPass="{!$Setup.ZendeskSession__c.password__c}" />
+  
+</apex:page>

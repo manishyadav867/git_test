@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>ClickDetails__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Boomerang Integration field - URL will provide click through analysis for this recipient. You can obtain information about which links in the email the recipient was interested in clicking</description>
+        <externalId>false</externalId>
+        <label>Click on URL to view click-thru report</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>DateClicked__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Boomerang integration field - Date URL was clicked</description>
+        <externalId>false</externalId>
+        <label>Date URL was clicked</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>DateOpened__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Date Email Opened</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>DateUnsubscribed__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Boomerang Integration Field - Date recipient unsubscribed, using this email to do so</description>
+        <externalId>false</externalId>
+        <label>Date Recipient Opted Out</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>IsEmailClicked__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Boomerang integration field - indicates if the email is clicked</description>
+        <externalId>false</externalId>
+        <label>Email Clicked</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>IsEmailOpened__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Boomerang integration field - indicates if the email was opened</description>
+        <externalId>false</externalId>
+        <label>Email Opened</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>IsUnsubscribed__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Boomerang Integration field - indicates if the recipient has opted out. This information is also marked in the Email Opt Out field of the lead or contact</description>
+        <externalId>false</externalId>
+        <label>Opted Out</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>MessageURL__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Link to the message</description>
+        <externalId>false</externalId>
+        <label>Click on URL to view Message</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>StatusDescription__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Boomerang integration field desc- provides additional information on the delivery status</description>
+        <externalId>false</externalId>
+        <label>Delivery Status Description</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>StatusUpdatedDate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Boomerang Integration field - delivery date and time, indicates the most recent date and time at which the delivery status was updated</description>
+        <externalId>false</externalId>
+        <label>Delivery Date</label>
+        <required>false</required>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Type__c</fullName>
+        <deprecated>false</deprecated>
+        <description>BlastWizard Integration field - indicates Type of Communication</description>
+        <externalId>false</externalId>
+        <label>Type</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>id__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Boomerang integration field</description>
+        <externalId>true</externalId>
+        <label>Boomerang Id</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+</CustomObject>

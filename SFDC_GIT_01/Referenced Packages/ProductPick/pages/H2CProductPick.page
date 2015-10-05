@@ -1,0 +1,372 @@
+<apex:page standardController="Opportunity" extensions="hcpp.H2CProductPickCon" >
+
+<apex:includeScript value="{!URLFOR($Resource.hcpp__JQUERYUI, 'jquery-ui-1.10.3/jquery-1.9.1.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.hcpp__JQUERYUI, 'jquery-ui-1.10.3/ui/jquery-ui.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.hcpp__JQUERYUI, 'jquery-ui-1.10.3/themes/base/jquery-ui.css')}"/>
+ 
+  
+  <script type="text/javascript">
+      function confirmation() 
+        {
+            if({!NOT(ISNULL(selPricebookID))}){
+                return confirm('You have modified the price book for this opportunity.  All products related to this opportunity will be permanently deleted.  Continue?');
+            }
+            else{
+                return true;
+            }
+        }
+      
+       function fsetconfirmation() 
+        {
+            
+                return confirm('Changing fieldset will cause all unsaved changes to be lost.  Continue?');
+            
+        }
+        
+      function noenter(ev)  {
+        if (window.event && window.event.keyCode == 13 || ev.which == 13) {
+            doSearchAF();
+            return false;
+         } else {
+              return true;
+         }
+     }
+  </script>
+  
+  <apex:sectionHeader title="Product Pick" subtitle="{!Opportunity.Name}"/>
+  
+      <apex:form >     
+      
+        <apex:pageBlock >
+            <apex:pageMessages ></apex:pageMessages> 
+
+            <apex:pageBlockSection >
+
+                <!-- 
+                <apex:outputpanel >
+                    <apex:outputlabel value="Price Book" ></apex:outputlabel>
+                    <apex:selectList multiselect="false" size="1" value="{!selPricebookID}">
+                        <apex:selectOptions value="{!priceBookOptions}"/>
+                    </apex:selectList>                    
+                    <apex:commandButton value="Set Price Book" action="{!doSavePB}"  onclick="if (!confirmation()) return false;"></apex:commandButton>
+                </apex:outputpanel>
+                 -->
+                <apex:outputpanel >
+                    <apex:outputlabel value="Price Book:" style="font-weight:bold;"></apex:outputlabel>
+                    <apex:outputText value=" {!thisPricebookObj.Name} "/>
+                    <apex:commandButton value="Choose Price Book" action="{!doSavePBStd}" immediate="true"></apex:commandButton>                                                                                   
+                </apex:outputpanel> 
+                
+                 <apex:outputpanel rendered="{!IF(OLIFSOptions.size>1,true,false)}" >
+                <apex:outputlabel value="Configure Pricing Fields"></apex:outputlabel>
+                     <apex:selectList multiselect="false" size="1" value="{!selOLIFS}">
+                        <apex:selectOptions value="{!OLIFSOptions}"/>                       
+                     </apex:selectList>
+                     <apex:commandButton value="Set FieldSet" action="{!doSetFieldset}" onclick="if (!fsetconfirmation()) return false;"></apex:commandButton>
+                  </apex:outputpanel>
+                  </apex:pageBlockSection> 
+            
+                    
+
+       </apex:pageBlock>
+      </apex:form>  
+  
+    <apex:form rendered="{!NOT(ISNULL(selPricebookID))}">     
+        <apex:pageBlock rendered="{!IF(OppFieldList.size>0,true,false)}">
+
+            <!-- Opportunity Details -->
+            <apex:pageBlockSection collapsible="false">
+
+                <apex:repeat value="{!OppFieldList}" var="fvar">
+                  <apex:outputField value="{!thisOpportunity[fvar.fieldPath]}" />
+                </apex:repeat>   
+            </apex:pageBlockSection>
+   </apex:pageBlock>
+   
+    <apex:pageBlock title="Product Pick" >
+                
+            <apex:pageBlockButtons >
+                        <apex:commandButton value="Save" action="{!doSave}"></apex:commandButton>
+                        <apex:commandButton value="Quick Save" action="{!doQuickSave}"></apex:commandButton>
+                        <apex:commandButton value="Cancel" action="{!doCancel}" immediate="true"></apex:commandButton>
+            </apex:pageBlockButtons> 
+<!--           <a onclick="gridcalc();" id="add_button" style="margin-top:20px;display: block;border: 4px solid #fff;box-shadow: 2px 2px 1px #aaaaaa;border-radius:5px; padding: 5px;width: 200px;background-color: #336699;color: #fff;">Update the calculations</a>-->
+           <script>
+                function gridcalcUnitPrice(){
+                    var tmpGrandTotal = 0;
+                    var tmpGrandSubTotal = 0;
+                    var tmpGrandDiscount = 0;                    
+                    for (var icnt = 0; icnt  < {!gSelectCount}; icnt ++) {
+                        var tmpQuantity = parseFloat( $( ".QUANTITY"+icnt ).val().replace(',',''));
+                        
+                        var tmpUnitPrice = parseFloat( $( ".UNITPRICE"+icnt ).val().replace(',',''));
+                        
+                        var tmpDiscount = 0
+                        try{
+                            var tmpDFV = $( ".DISCOUNT"+icnt );
+                            tmpDiscount = parseFloat( tmpDFV.val().replace(',',''))/100;                                                    
+                        }
+                        catch(Exp){
+                        }
+                        
+                         if(!tmpDiscount){
+                             tmpDiscount  = 0;
+                         }
+                         
+                        //alert(tmpQuantity*tmpUnitPrice);
+                        $( ".SUBTOTAL"+icnt ).text( (tmpQuantity*tmpUnitPrice).toFixed(2) );
+                        $( ".TOTAL"+icnt ).text( (tmpQuantity*tmpUnitPrice*(1-tmpDiscount) ).toFixed(2) );
+                        tmpGrandTotal += tmpQuantity*tmpUnitPrice*(1-tmpDiscount);
+                        tmpGrandSubTotal += tmpQuantity*tmpUnitPrice;
+                    }
+                    $( ".cGrandTotal" ).text(  tmpGrandTotal.toFixed(2) );
+                    $( ".cGrandSubTotal" ).text( tmpGrandSubTotal.toFixed(2) );
+                    $( ".cGrandDiscountPct" ).text( ((1-tmpGrandTotal/tmpGrandSubTotal)*100).toFixed(2)     );
+                      
+                }
+
+                function gridcalcDiscount(){
+
+                    var tmpGrandTotal = 0;
+                    var tmpGrandSubTotal = 0;   
+                    var tmpGrandDiscount = 0;                   
+                    
+                    for (var icnt = 0; icnt  < {!gSelectCount}; icnt ++) {
+                        var tmpQFV = $( ".QUANTITY"+icnt );
+                        var tmpQuantity = parseFloat( tmpQFV.val().replace(',',''));
+                        var tmpUnitPrice = parseFloat( $( ".UNITPRICE"+icnt ).val().replace(',',''));
+                        
+                        var tmpDiscount = 0
+                        try{
+                            var tmpDFV = $( ".DISCOUNT"+icnt );
+                            tmpDiscount = parseFloat( tmpDFV.val().replace(',',''))/100;                        
+                        }
+                        catch(Exp){
+                        }
+                        
+                         if(!tmpDiscount){
+                             tmpDiscount  = 0;
+                         }
+                        //alert(tmpQuantity*tmpUnitPrice);
+                        $( ".SUBTOTAL"+icnt ).text(  (tmpQuantity*tmpUnitPrice).toFixed(2) );
+                        $( ".TOTAL"+icnt ).text((tmpQuantity*tmpUnitPrice*(1-tmpDiscount) ).toFixed(2) );
+                        tmpGrandTotal += tmpQuantity*tmpUnitPrice*(1-tmpDiscount);
+                        tmpGrandSubTotal += tmpQuantity*tmpUnitPrice;
+                    }
+                    $( ".cGrandTotal" ).text(  tmpGrandTotal.toFixed(2) );
+                    $( ".cGrandSubTotal" ).text(tmpGrandSubTotal.toFixed(2) );                    
+                    $( ".cGrandDiscountPct" ).text( ((1-tmpGrandTotal/tmpGrandSubTotal)*100).toFixed(2)     );
+                }                
+           </script>
+           
+   <!-- Main Frame -->          
+   <apex:pageBlockSection collapsible="false" columns="{!gPPSettings.hcpp__Main_ColNum__c}">
+            
+            <!-- Products Available to be Selected -->
+            
+            <apex:pageBlockSection title="Search and Select Products" columns="1" >
+            <!-- Search Box -->             
+             
+            <apex:pageBlockSection columns="3"   >               
+
+       
+                 
+                 <apex:repeat value="{!gSP.lsProductSearchFields}" var="fvar">
+                    
+                      <apex:inputText label="{!fvar.ppFieldLabel}" value="{!fvar.ppFieldValue}" rendered="{!IF(fvar.ppFieldType=='Text',true,false)}"  onkeypress="return noenter(event);" style="border=1;"></apex:inputText>
+                      
+                       <apex:selectList label="{!fvar.ppFieldLabel}"  value="{!fvar.ppFieldValue}" size="1" rendered="{!IF(fvar.ppFieldType=='PickList',true,false)}"  onkeypress="return noenter(event);" >
+                            <apex:selectOptions value="{!fvar.ppSelectOptions}"/>
+                        </apex:selectList>
+                        
+                 </apex:repeat>
+                  
+                <apex:outputPanel >
+                    <apex:commandButton title="Search" value="Search" action="{!doSearch}" ></apex:commandButton>
+                    <apex:actionFunction name="doSearchAF" action="{!doSearch}" />                               
+                    <apex:commandButton title="Clear Search" value="Clear Search" action="{!doClearSearch}" ></apex:commandButton>
+                </apex:outputPanel>          
+              
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" showHeader="false"> 
+
+                <!-- <apex:outputText value="Search Term: {!SearchTerm}"/> -->
+                
+            </apex:pageBlockSection>
+            <hr></hr>
+            <apex:outputPanel >
+
+                      
+            </apex:outputPanel>
+
+            <apex:outputPanel id="availProductGrid">
+               <apex:pageBlockTable value="{!lsAvailableProd}" var="aProduct">              
+                    <apex:column >
+                       <apex:facet name="header">
+                                    <apex:outputPanel >        
+                                                        
+                                     <apex:commandLink value="" title="Add All Selected" action="{!doAddOLI}"><img src="{!$Resource.hcpp__Add_All_Button}"/></apex:commandLink>
+                                     <apex:commandLink value="" title="Select All" action="{!doSelectAll}"><img src="{!$Resource.hcpp__Sel_All_Button}"/></apex:commandLink>
+                                     <apex:commandLink value="" title="DeSelect All" action="{!doDeSelectAll}"><img src="{!$Resource.hcpp__DeSel_All_Button}"/></apex:commandLink>
+                                    </apex:outputPanel>                                 
+                       </apex:facet>
+                        
+                    <apex:inputCheckBox value="{!aProduct.isPicked}"></apex:inputCheckBox></apex:column>
+                    
+                    
+                    <apex:repeat value="{!AvailProductFieldList}" var="fvar">
+                       <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink action="{!doSearch}" value="{!fvar.Label}">
+                                    <apex:param name="Sort Column" value="{!fvar.fieldPath}" assignTo="{!gOrderBy}"/>                                   
+                                </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputField value="{!aProduct.ProductRec[fvar.fieldPath]}"></apex:outputField> 
+                        </apex:column>   
+                    </apex:repeat>
+
+                     <apex:column headerValue="Unit Price"> 
+                        <apex:outputField value="{!aProduct.PriceBookRec.UnitPrice}"></apex:outputField> 
+                     </apex:column>
+                     
+                </apex:pageBlockTable>
+            <apex:outputPanel >
+
+                <apex:commandLink value="" title="Add All Selected" action="{!doAddOLI}"><img src="{!$Resource.hcpp__Add_All_Button}"/></apex:commandLink>
+                                     <apex:commandLink value="" title="Select All" action="{!doSelectAll}"><img src="{!$Resource.hcpp__Sel_All_Button}"/></apex:commandLink>
+                                     <apex:commandLink value="" title="DeSelect All" action="{!doDeSelectAll}"><img src="{!$Resource.hcpp__DeSel_All_Button}"/></apex:commandLink>          
+            </apex:outputPanel>
+                              
+                <div style="float:right;">
+                <apex:commandLink style=" text-decoration: none;" action="{!doPrevPage}">&#9668;Prev Page</apex:commandLink>
+                    <apex:inputText value="{!CurrPage}" size="3"> 
+                                <apex:actionSupport event="onchange" action="{!UpdatePage}"/>                                
+                    </apex:inputText>
+                    
+                    of {!TotalPage}&nbsp;
+                <apex:commandLink style=" text-decoration: none;"  action="{!doNextPage}">Next Page&#9658;</apex:commandLink>
+                </div>
+            </apex:outputPanel>
+
+
+            </apex:pageBlockSection>
+
+            <!-- Products Selected -->
+            <apex:outputPanel id="selectgrid" >
+            
+            <apex:pageBlockSection title="Configure Pricing" columns="1">
+                    <!-- <apex:inputText styleClass="txtAmt"></apex:inputText> -->
+                    
+                    <apex:pageBlockSection columns="1"  >
+                    
+                       <apex:pageBlockTable value="{!lsSelectedProd}" var="aProduct" style="width:100%"  >            
+                            
+                            <apex:column >
+                                <apex:facet name="header" >
+                                    
+                                    
+                                    <apex:outputPanel >        
+                                                        
+                                     <apex:commandLink value="" title="Remove All Selected" action="{!doRemoveOLI}"><img src="{!$Resource.hcpp__Del_All_Button}"/></apex:commandLink>
+                                     <apex:commandLink value="" action="{!doCloneAllOLI}" title="Clone All Selected Product Line" style="text-decoration: none;"> <img src="{!$Resource.hcpp__Clone_Button}"/>    </apex:commandLink>
+                                    </apex:outputPanel>
+                                    
+                                </apex:facet>
+                                <apex:facet name="footer">
+                                <apex:outputpanel >
+                                     <apex:commandLink value="" title="Remove All Selected" action="{!doRemoveOLI}"><img src="{!$Resource.hcpp__Del_All_Button}"/></apex:commandLink>
+                                     <apex:commandLink value="" action="{!doCloneAllOLI}" title="Clone All Selected Product Line" style="text-decoration: none;"> <img src="{!$Resource.hcpp__Clone_Button}"/>    </apex:commandLink>
+                                </apex:outputPanel>
+                                </apex:facet>
+                                <apex:outputpanel >
+                                    <apex:inputCheckBox value="{!aProduct.isPicked}"></apex:inputCheckBox>  
+                                    <!-- 
+                                    &nbsp;                          
+                                    <apex:commandLink value="" action="{!doCloneOLI}" title="Clone Product Line" style="text-decoration: none;">
+                                    <img src="{!$Resource.hcpp__Clone_Button}"/>
+                                        <apex:param name="gConfIndex" value="{!aProduct.UID}" assignTo="{!gConfIndex}"/>
+                                    </apex:commandLink>
+                                     -->    
+                                </apex:outputpanel>
+                                
+                            </apex:column>
+                                             
+                            
+                            <apex:column headerValue="Product Name" value="{!aProduct.name}"> </apex:column>
+                            
+                            <apex:repeat value="{!OLIFieldList}" var="fvar"> 
+                                <apex:column headerValue="{!fvar.Label}"> <apex:inputField styleClass="txtAmt" required="{!fvar.Required}" value="{!aProduct.OLIRec[fvar.fieldPath]}"></apex:inputField> </apex:column>                        
+                            </apex:repeat>
+                            <apex:column headerValue="Quantity">  <apex:inputField value="{!aProduct.OLIRec.Quantity}"  styleClass="QUANTITY{!aProduct.UID}" onchange="gridcalcUnitPrice();"></apex:inputField> </apex:column>
+                             <apex:column headerValue="Sale Price"><apex:inputField value="{!aProduct.OLIRec.Unitprice}" styleClass="UNITPRICE{!aProduct.UID}" onchange="gridcalcUnitPrice();"></apex:inputField></apex:column> 
+                            <apex:column headerValue="Discount (%)" rendered="{!gPPSettings.hcpp__ColR_Discount__c}">  
+                                <apex:inputField value="{!aProduct.OLIRec.Discount}" styleClass="DISCOUNT{!aProduct.UID}" onchange="gridcalcDiscount();"></apex:inputField> 
+                            
+                                <apex:facet name="footer" >
+                                    <apex:outputPanel layout="block">
+                                    <apex:outputText styleClass="cGrandDiscountPct" value="{0, number, ### ### ### ###.00}"  >
+                                        <apex:param value="{!GrandDiscountPct}"/>
+                                    </apex:outputText>                                    
+                                    </apex:outputPanel>                                    
+                                </apex:facet>    
+                            </apex:column>
+                                                         
+                            <apex:column headerValue="Subtotal" style="text-align:right;" rendered="{!gPPSettings.hcpp__ColR_SubTotal__c}" >
+                                <apex:outputText value="-"   styleClass="SUBTOTAL{!aProduct.UID}"></apex:outputText>
+                            
+                                <apex:facet name="footer" >
+                                    <apex:outputPanel layout="block" style="text-align:right">
+                                    <apex:outputText styleClass="cGrandSubTotal"  value="{0, number, ### ### ### ###.00}"  >
+                                        <apex:param value="{!GrandSubTotal}"/>
+                                    </apex:outputText>                                    
+                                    </apex:outputPanel>                                    
+                                </apex:facet>
+                            </apex:column>
+                            
+                            <style>
+                                .cGrandTotal2{text-align:right;}
+                            </style>
+                            <apex:column headerValue="Total" style="text-align:right;" rendered="{!gPPSettings.hcpp__ColR_Total__c}">
+                                <apex:outputText value="-" styleClass="TOTAL{!aProduct.UID}"></apex:outputText> 
+
+                                <apex:facet name="footer" >
+                                    <apex:outputPanel layout="block" style="text-align:right">
+                                    <apex:outputText styleClass="cGrandTotal" value="{0, number, ### ### ### ###.00}"  >
+                                        <apex:param value="{!GrandTotal}"/>
+                                    </apex:outputText>                                    
+                                    </apex:outputPanel>                                    
+                                </apex:facet>
+
+                            </apex:column>
+                             
+                        </apex:pageBlockTable>
+                         
+                    
+                    </apex:pageBlockSection>
+                
+
+            </apex:pageBlockSection>
+               
+            
+            </apex:outputPanel>
+            
+         
+            
+           </apex:pageBlockSection> 
+            
+        </apex:pageBlock>    
+    </apex:form>
+    
+    <script>
+
+      gridcalcUnitPrice(); 
+   
+      
+    
+    //$(function() {
+    // Your fnNamt function here
+    // alert("Hello");
+    //});
+    </script>
+</apex:page>

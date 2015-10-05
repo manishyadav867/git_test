@@ -1,0 +1,210 @@
+<apex:page controller="OBJCNVTR.Fieldmap">
+    <apex:form ID="Form">
+        <apex:pageMessages rendered="{!NOT(AdminSetting.OBJCNVTR__Is_Admin__c)}" showDetail="false"></apex:pageMessages>
+        <apex:pageBlock id="PB" rendered="{!AdminSetting.OBJCNVTR__Is_Admin__c}">
+            <apex:pageMessages rendered="true" showDetail="false"></apex:pageMessages>
+            <script>
+            var childWindow;
+            function openLookup(url)
+            {
+            childWindow=window.open(url, '', 'location=1');
+            }
+            function lookupPick(a,b,c,d,e,f,g,h)
+            {
+                document.getElementById(b).value=e;
+                document.getElementById(c).value=f;
+                childWindow.close();
+            }
+            </script>
+            <apex:actionStatus startText="{!$Label.objcnvtr__PGLBL_Processing}" startStyle="display:Block" Id="Status">
+                <apex:facet name="start">
+                    <c:BluryBackground />
+                </apex:facet>
+            </apex:actionStatus>
+            <apex:actionFunction name="onSelectObject" Action="{!SelectObject}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onSelectTargetAction" Action="{!SelectTargetAction}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onSelectPostConvertAction" Action="{!SelectPostConvertAction}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onUniqueSelected" Action="{!UniqueSelected}" status="Status" reRender="Form"/>
+            <apex:actionFunction name="onFieldTypeChange" Action="{!FieldTypeChange}" status="Status" reRender="Form"/>
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!SaveFieldMapping}" value="{!$Label.objcnvtr__BTNLBL_Save}" reRender="PB" status="Status" rendered="{!NOT(isViewMode)}"/>
+                <apex:commandButton action="{!QuickSaveFieldMapping}" value="{!$Label.objcnvtr__BTNLBL_QuickSave}" reRender="PB" status="Status" rendered="{!NOT(isViewMode)}"/>
+                <apex:commandButton action="{!EditMap}" value="{!$Label.objcnvtr__BTNLBL_Edit}" reRender="PB" status="Status" rendered="{!isViewMode}"/>
+                <apex:commandButton action="{!Cancel}" value="{!$Label.objcnvtr__BTNLBL_Cancel}" reRender="PB" status="Status"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection >
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_MapName}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:inputtext value="{!oFieldMap.OBJCNVTR__ID__c}" disabled="{!IsViewMode}"/>    
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_SourceObject}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Source_Value__c}" multiselect="false" size="1" onchange="onSelectObject();" disabled="{!IsViewMode}">
+                            <apex:selectOptions value="{!lstSourceObject2}"/>
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_Description}</apex:outputText>
+                    <apex:inputtextarea value="{!oFieldMap.OBJCNVTR__Description__c}" disabled="{!IsViewMode}"/> 
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_TargetObject}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Target_Value__c}" multiselect="false" size="1" onchange="onSelectObject();" disabled="{!IsViewMode}">
+                            <apex:selectOptions value="{!lstTargetObject2}"/>
+                        </apex:SelectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_PostConvertAction}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Post_Convert_Action__c}" onchange="onSelectPostConvertAction()" multiselect="false" size="1" disabled="{!IsViewMode}">
+                            <apex:selectOption itemValue="" itemLabel="{!$Label.objcnvtr__PKLLBL_None}" />
+                            <apex:selectOption itemValue="SOURCE" itemLabel="{!$Label.objcnvtr__PKLLBL_RedirectToSourceObject}"/>
+                            <apex:selectOption itemValue="TARGET" itemLabel="{!$Label.objcnvtr__PKLLBL_RedirectToTargetObject}"/>
+                            <apex:selectOption itemValue="GRID" itemLabel="{!$Label.objcnvtr__PKLLBL_LetUserSelect}"/>
+                            <apex:selectOption itemValue="URL" itemLabel="URL"/>
+                        </apex:SelectList>
+                        <apex:inputtext value="{!oFieldMap.OBJCNVTR__Target_URL__c}" disabled="{!IsViewMode}" rendered="{!oFieldMap.OBJCNVTR__Post_Convert_Action__c = 'URL'}"  />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_TargetObjectAction}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Target_Object_Action__c}" multiselect="false" size="1" onchange="onSelectTargetAction();" disabled="{!IsViewMode}">
+                            <apex:selectOption itemValue="" itemLabel="{!$Label.objcnvtr__PKLLBL_None}" />
+                            <apex:selectOption itemValue="INSERT" itemLabel="{!$Label.objcnvtr__PKLLBL_AlwaysCreateNew}"/>
+                            <apex:selectOption itemValue="UPSERT" itemLabel="{!$Label.objcnvtr__PKLLBL_UpdateIfFoundElseCreate}"/>
+                            <apex:selectOption itemValue="UPDATE" itemLabel="{!$Label.objcnvtr__PKLLBL_AlwaysUpdateOnly}"/>
+                        </apex:SelectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>    
+                <apex:pageBlockSectionItem >
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_TargetRecordType}</apex:outputText>
+                    <apex:selectList value="{!oFieldMap.OBJCNVTR__RecordType__c}" multiselect="false" size="1" disabled="{!IsViewMode}">
+                        <apex:selectOptions value="{!lstRecordType}"/>
+                    </apex:SelectList>
+                </apex:pageBlockSectionItem>    
+                 <apex:pageBlockSectionItem rendered="{! if(oFieldMap.Target_Object_Action__c != 'INSERT' && oFieldMap.Target_Object_Action__c != '', true, false)}">
+                    <apex:outputText >{!$Label.objcnvtr__PGLBL_IfMultipleTargetRecordFound}</apex:outputText>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:selectList value="{!oFieldMap.OBJCNVTR__Multiple_Target_Record_Action__c}" multiselect="false" size="1" disabled="{!IsViewMode}">
+                            <apex:selectOption itemValue="" itemLabel="{!$Label.objcnvtr__PKLLBL_None}" />
+                            <apex:selectOption itemValue="All" itemLabel="{!$Label.objcnvtr__PKLLBL_ProcessAllRecords}"/>
+                            <apex:selectOption itemValue="No" itemLabel="{!$Label.objcnvtr__PKLLBL_ProcessNoRecord}"/>
+                            <apex:selectOption itemValue="Error" itemLabel="{!$Label.objcnvtr__PKLLBL_DisplayError}"/>
+                        </apex:SelectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>            
+            </apex:pageBlockSection>
+            <apex:pageBlocksection collapsible="true" title="{!$Label.objcnvtr__PGLBL_TargetObjectAction}"  >
+                <apex:pageBlockTable value="{!lstWrapperFieldMapTarget}" var="FieldMapDetail">
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_TargetObjectFields}</apex:facet>
+                        <apex:outputtext value="{!FieldMapDetail.strFieldLabel}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_Type}</apex:facet>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" rendered="{!NOT(FieldMapDetail.isNillable)}"/>
+                            <apex:selectList value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Value_Type__c}" multiselect="false" size="1" disabled="{!IsViewMode}" ><!--onChange="onFieldTypeChange();"-->
+                                <apex:selectOptions value="{!FieldMapDetail.lstValueType}"/>
+                            </apex:SelectList>
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_SourceObjectFields}</apex:facet>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" rendered="{!NOT(FieldMapDetail.isNillable) && (FieldMapDetail.Configuration_data.OBJCNVTR__Value_Type__c = 'Static Value' || FieldMapDetail.Configuration_data.OBJCNVTR__Value_Type__c = 'Combination')}"/>
+                           
+                       <!--     <apex:inputField value="{!FieldMapDetail.Configuration_data.Source_Value_Date__c}" rendered="{!if(FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value' && FieldMapDetail.Configuration_data.Field_Type__c = 'DATE', true, false)}"></apex:inputfield>
+                            <apex:inputField value="{!FieldMapDetail.Configuration_data.Source_Value_Date_Time__c}" rendered="{!if(FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value' && FieldMapDetail.Configuration_data.Field_Type__c = 'DATETIME', true, false)}"/>
+                            <apex:selectlist value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value__c}" multiselect="false" size="1" disabled="{!IsViewMode}" rendered="{!if(FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value' && FieldMapDetail.Configuration_data.Field_Type__c = 'PICKLIST', true, false)}">
+                                <apex:selectOptions value="{!FieldMapDetail.lstTargetFieldOptionPicklist}"/>
+                            </apex:selectlist>
+                            <apex:outputPanel id="OPLookUp" rendered="{!FieldMapDetail.Configuration_data.Field_Type__c = 'REFERENCE' &&  FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value'}">
+                                <apex:selectlist value="{!FieldMapDetail.strSelectedRefObjectName}" multiselect="false" size="1" disabled="{!IsViewMode}" rendered="{!FieldMapDetail.Configuration_data.Field_Type__c="REFERENCE" &&  FieldMapDetail.Configuration_data.Value_Type__c="Static Value" && FieldMapDetail.iReferenceObjects > 1}">
+                                    <apex:selectOptions value="{!FieldMapDetail.lstReferenceObject}"/>
+                                </apex:selectlist>
+                                    <apex:inputhidden id="lea20_lkid" value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value_String__c}"/>
+                                    <span class="lookupInput" style="display : {!if(FieldMapDetail.strSelectedRefObjectName = '','none', 'inline')}" >
+                                        <apex:inputtext id="lea20" maxlength="255" onchange="getElementByIdCS('{!$Component.lea20_lkid}').value='';" size="20" value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value__c}" />
+                                        <a href="javascript: openLookup('/_ui/common/data/LookupPage?lkfm=editPage&lknm={!$Component.lea20}&lktp=' + '{!FieldMapDetail.strSelectedObjKeyPrefix}',670,'1','&lksrch=' + escapeUTF(getElementByIdCS('{!$Component.lea20}').value.substring(0, 80)))" id="lea20_lkwgt" onclick="setLastMousePosition(event)" tabindex="7" title="{!FieldMapDetail.strFieldlabel} Lookup (New Window)">
+                                            <img src="/s.gif" alt="{!FieldMapDetail.strFieldlabel} Lookup (New Window)"  class="lookupIcon" onblur="this.className = 'lookupIcon';" onfocus="this.className = 'lookupIconOn';" onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" title="{!FieldMapDetail.strFieldlabel} Lookup (New Window)"/>
+                                        </a>
+                                    </span>
+                            </apex:outputPanel>-->
+                            <!--<apex:inputText value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value_String__c}" disabled="{!IsViewMode}" rendered="{!FieldMapDetail.Configuration_data.Field_Type__c = 'REFERENCE' &&  FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value'}"/>-->
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" rendered="{!NOT(FieldMapDetail.isNillable)}"/>
+                            <apex:inputText value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value_String__c}" disabled="{!IsViewMode}" rendered="{!FieldMapDetail.IsStatucValueAvailable}"/><!--FieldMapDetail.Configuration_data.Field_Type__c != 'PICKLIST' && -- (FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value' || FieldMapDetail.Configuration_data.Value_Type__c = 'Both') && if(FieldMapDetail.Configuration_data.Field_Type__c != 'DATE' && FieldMapDetail.Configuration_data.Field_Type__c != 'DATETIME' && FieldMapDetail.Configuration_data.Field_Type__c != 'REFERENCE', true, false) -->
+                            <apex:selectlist value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value__c}" multiselect="false" size="1" disabled="{!IsViewMode}" ><!--rendered="{!if(FieldMapDetail.Configuration_data.Value_Type__c = 'Source Object Field' || FieldMapDetail.Configuration_data.Value_Type__c = 'Both', true, false)}"-->
+                                <apex:selectOptions value="{!FieldMapDetail.lstSourceFieldOption}"/>
+                            </apex:selectlist>
+                        </apex:outputPanel>
+                    </apex:column>
+                    <apex:column width="10%">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_UniqueKey}</apex:facet>
+                        <apex:inputCheckbox value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Unique_Key__c}" onchange="onUniqueSelected();" disabled="{!IsViewMode || isInsert || FieldMapDetail.IsUniqueKeyfalse}"/><!-- || FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value'-->
+                    </apex:column>
+                    <apex:column width="10%">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_Required}</apex:facet>
+                        <apex:inputCheckbox value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Required__c}" disabled="{!IsViewMode || NOT(FieldMapDetail.isNillable)}" rendered="{!NOT(FieldMapDetail.Configuration_data.OBJCNVTR__Unique_Key__c)}"/><!-- || FieldMapDetail.Configuration_data.Value_Type__c = 'Static Value'-->
+                    </apex:column>
+                     <apex:column width="10%">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_OverrideFieldValue}</apex:facet>
+                        <apex:inputCheckbox value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Override_Field_Value__c}" disabled="{!IsViewMode || isInsert}" rendered="{!NOT(FieldMapDetail.Configuration_data.OBJCNVTR__Unique_Key__c)}"/>
+                    </apex:column>
+                    <apex:column width="10%">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_PopulateIfAccess}</apex:facet>
+                        <apex:inputCheckbox value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Populate_if_access__c}" disabled="{!IsViewMode || NOT(FieldMapDetail.isNillable)}" rendered="{!NOT(FieldMapDetail.Configuration_data.OBJCNVTR__Unique_Key__c)}"/>
+                    </apex:column>
+                    <apex:column width="10%">
+                        <apex:facet name="header">Ignore Required Field</apex:facet>
+                        <apex:inputCheckbox value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Ignore_Required_Field__c}" disabled="{!IsViewMode}" rendered="{!NOT(FieldMapDetail.isNillable)}"/>
+                    </apex:column>                    
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlocksection collapsible="true" title="{!$Label.objcnvtr__PGLBL_SourceObjectAction}">
+                <apex:pageBlockTable value="{!lstWrapperFieldMapSource}" var="FieldMapDetail">
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_SourceObjectFields}</apex:facet>
+                        <apex:outputtext value="{!FieldMapDetail.strFieldLabel}"/>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_TargetObjectFields}</apex:facet>
+                        <apex:selectlist value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value__c}" multiselect="false" size="1" disabled="{!IsViewMode}" ><!--rendered="{!if(FieldMapDetail.Configuration_data.Value_Type__c = 'Source Object Field', true, false)}"-->
+                            <apex:selectOptions Value="{!FieldMapDetail.lstTargetOperand}"/>
+                        </apex:selectlist>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_TargetValue}</apex:facet>
+                        <apex:inputText value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value_String__c}" disabled="{!IsViewMode}" rendered="{!NOT(FieldMapDetail.IsRecordType)}"/>
+                        <apex:selectlist value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Source_Value_String__c}" multiselect="false" size="1" disabled="{!IsViewMode}" rendered="{!FieldMapDetail.IsRecordType}" >
+                            <apex:selectOptions Value="{!FieldMapDetail.lstRecordType}"/>
+                        </apex:selectlist>
+                    </apex:column>
+                    <apex:column width="10%">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_OverrideFieldValue}</apex:facet>
+                        <apex:inputCheckbox value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Override_Field_Value__c}" disabled="{!IsViewMode}" rendered="{!NOT(FieldMapDetail.Configuration_data.OBJCNVTR__Unique_Key__c)}"/>
+                    </apex:column>
+                    <apex:column width="10%">
+                        <apex:facet name="header">{!$Label.objcnvtr__PGLBL_PopulateIfAccess}</apex:facet>
+                        <apex:inputCheckbox value="{!FieldMapDetail.Configuration_data.OBJCNVTR__Populate_if_access__c}" disabled="{!IsViewMode || NOT(FieldMapDetail.isNillable)}" rendered="{!NOT(FieldMapDetail.Configuration_data.OBJCNVTR__Unique_Key__c)}"/>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

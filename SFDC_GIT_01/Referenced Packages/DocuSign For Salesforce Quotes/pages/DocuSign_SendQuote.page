@@ -1,0 +1,86 @@
+<apex:page standardController="Quote" extensions="dfsq.DocuSignSendQuoteController" action="{!initConfiguration}">
+<apex:form >
+<apex:sectionHeader title="DocuSign your Quote" subtitle="{!QuoteRecord.Name}" />
+<apex:pageblock title="DocuSign Administration" rendered="{!DisplayDocuSignPasswordUpdate}">
+    <apex:outputlabel value="Your DocuSign password on file may be invalid. Select Update Password to enter your DocuSign password." />
+    <br />
+    <apex:commandButton id="btnUpdatePw" value="Update Password" action="{!UpdateUserPassword}" />
+</apex:pageblock>
+<apex:pageblock title="Details">
+    <apex:pageMessages />
+    <apex:outputPanel layout="block">
+        <apex:pageBlockSection title="Recipient Information" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="To:" />
+                <apex:outputLabel value="{!QuoteRecord.Contact.Name}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Email:" />
+                <apex:outputLabel value="{!QuoteRecord.Contact.Email}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Subject:" />
+                <apex:inputText size="100" style="width: 640px" value="{!Subject}" id="txtSubject"/> 
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Body:" />
+                <apex:inputTextarea cols="123" rows="10" style="width: 640px" value="{!Body}" id="txtBody" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:outputPanel>
+    <apex:pageBlockButtons >
+        <apex:commandLink value="Send" action="{!Send}" 
+            styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;"
+            rendered="{!ConnectPermission != 'None'}">
+            <apex:param name="sessionId1" assignTo="{!apiSessionId}" value="{!$Api.Session_ID}" />
+            <apex:param name="serverURL1" assignTo="{!apiServerURL}" value="{!$Api.Partner_Server_URL_170}" /> 
+        </apex:commandLink>
+        <apex:commandLink id="btnConfigure" value="Configure Account" 
+            action="{!ConfigureAccount}" rendered="{!ConnectPermission == 'None'}"
+            styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;" />
+        <apex:commandLink id="btnCancel" value="Cancel" action="{!Cancel}" styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;" />
+        <apex:commandLink id="btnAdvanced" value="Advanced" action="{!SendAdvanced}" 
+            styleClass="btn" style="padding:2px 5px 2px 5px; text-decoration:none;" rendered="{!ConnectPermission == 'Full'}" />
+    </apex:pageBlockButtons>
+</apex:pageBlock>
+</apex:form>
+<apex:pageblock title="Quote PDF">
+    <apex:outputLabel value="No records to display" rendered="{!NumberQuoteDocuments == 0}" />
+    <apex:outputPanel layout="block" rendered="{!NumberQuoteDocuments > 0}">
+        <apex:dataTable value="{!QuoteDocumentRecord}" var="doc" id="tblQDocs" style="width: 100%">
+            <apex:column >
+                <apex:facet name="header">Name</apex:facet>
+                <apex:outputText value="{!doc.Name}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Discount</apex:facet>
+                <apex:outputText value="{0,number,percent}">
+                    <apex:param value="{!doc.Discount}" />
+                </apex:outputText>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Grand Total</apex:facet>
+                <apex:outputText value="{0,number,currency}">
+                    <apex:param value="{!doc.GrandTotal}" />
+                </apex:outputText>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Created By</apex:facet>
+                <apex:outputText value="{!doc.CreatedBy.FirstName} {!doc.CreatedBy.LastName}, {!doc.CreatedDate}"/>
+            </apex:column>
+        </apex:dataTable>
+    </apex:outputPanel>
+</apex:pageblock>
+</apex:page>

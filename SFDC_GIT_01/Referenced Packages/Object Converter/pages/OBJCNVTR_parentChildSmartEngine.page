@@ -1,0 +1,107 @@
+<apex:page Controller="OBJCNVTR.parentChildSmartEngine" Action="{!updateRecord}" ><!---->
+    <apex:form >
+            <!--<apex:actionFunction Action="{!updateRecord}" id="DoUpdateRecord" name="DoUpdateRecord" reRender="PB"/>-->
+       
+        <apex:pageBlock ID="PB">
+            <apex:pageMessages rendered="true"></apex:pageMessages>
+            <apex:repeat var="WPP" value="{!lstWrapperParent}">
+                 <apex:pageBlocktable value="{!WPP.lstWrapperResultRow}" var="WrapperParent" rendered="{!NOT(IsError)}">
+                    <apex:column >
+                        <apex:facet name="header" >{!WPP.SourceObjectName}</apex:facet>
+                        <apex:outputLink value="/{!WrapperParent.SourceObjectID}/e?retURL={!WrapperParent.SourceObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_Edit}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputtext ><b>/</b></apex:outputtext>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperParent.SourceObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_View}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperParent.SourceObjectID}" target="blank">{!WrapperParent.SourceObjectID}</apex:outputLink>
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header" >{!WPP.TargetObjectName}</apex:facet>
+                        <apex:outputLink value="/{!WrapperParent.TargetObjectID}/e?retURL={!WrapperParent.TargetObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_Edit}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputtext ><b>/</b></apex:outputtext>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperParent.TargetObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_View}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperParent.TargetObjectID}" target="blank">{!WrapperParent.TargetObjectID}</apex:outputLink>
+
+                    </apex:column>
+                    <!--<apex:column >
+                        <apex:facet name="header" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!$Label.PGLBL_ObjectId}</apex:facet>
+                        <apex:outputLink value="/{!WrapperSource.ObjectID}/e?retURL={!WrapperSource.ObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_Edit}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputtext ><b>/</b></apex:outputtext>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperSource.ObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_View}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperSource.ObjectID}" target="blank">{!WrapperSource.ObjectID}</apex:outputLink>
+                    </apex:column>-->
+                </apex:pageBlocktable>
+            </apex:repeat>    
+            <apex:repeat var="WPP" value="{!lstWrapperChild}">
+                 <apex:pageBlocktable value="{!WPP.lstWrapperResultRow}" var="WrapperChild" rendered="{!NOT(IsError)}">
+                    <apex:column >
+                        <apex:facet name="header" >{!WPP.SourceObjectName}</apex:facet>
+                        <apex:outputLink value="/{!WrapperChild.SourceObjectID}/e?retURL={!WrapperChild.SourceObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_Edit}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputtext ><b>/</b></apex:outputtext>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperChild.SourceObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_View}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperChild.SourceObjectID}" target="blank">{!WrapperChild.SourceObjectID}</apex:outputLink>
+
+                    </apex:column>
+                    <apex:column >
+                        <apex:facet name="header" >{!WPP.TargetObjectName}</apex:facet>
+                        <apex:outputLink value="/{!WrapperChild.TargetObjectID}/e?retURL={!WrapperChild.TargetObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_Edit}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputtext ><b>/</b></apex:outputtext>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperChild.TargetObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_View}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperChild.TargetObjectID}" target="blank">{!WrapperChild.TargetObjectID}</apex:outputLink>
+
+                    </apex:column>
+                    <!--<apex:column >
+                        <apex:facet name="header" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!$Label.PGLBL_ObjectId}</apex:facet>
+                        <apex:outputLink value="/{!WrapperSource.ObjectID}/e?retURL={!WrapperSource.ObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_Edit}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputtext ><b>/</b></apex:outputtext>
+                        <apex:outputText >&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperSource.ObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_View}</b></apex:outputLink>
+                        <apex:outputText >&nbsp;&nbsp;</apex:outputText>
+                        <apex:outputLink value="/{!WrapperSource.ObjectID}" target="blank">{!WrapperSource.ObjectID}</apex:outputLink>
+                    </apex:column>-->
+                </apex:pageBlocktable>
+            </apex:repeat>    
+            
+            <!--<apex:pageBlocktable value="{!lstWrapperResult}" var="WrapperResult" rendered="{!NOT(IsError)}">
+                <apex:column style="width: 25%;">
+                    <apex:facet name="header" >{!$Label.PGLBL_ResultObjectName}</apex:facet>
+                    <apex:outputText >{!WrapperResult.ObjectName}</apex:outputText>
+                </apex:column>
+                <apex:column style="width: 10%;">
+                    <apex:facet name="header" >{!$Label.PGLBL_Action}</apex:facet>
+                    <apex:outputText >{!WrapperResult.ResultAction}</apex:outputText>
+                </apex:column>
+
+                <apex:column >
+                    <apex:facet name="header" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!$Label.PGLBL_ObjectId}</apex:facet>
+                    <apex:outputLink value="/{!WrapperResult.ObjectID}/e?retURL={!WrapperResult.ObjectID}" target="blank"><b>{!$Label.objcnvtr__PGLBL_Edit}</b></apex:outputLink>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                    <apex:outputtext ><b>/</b></apex:outputtext>
+                    <apex:outputText >&nbsp;</apex:outputText>
+                    <apex:outputLink value="/{!WrapperResult.ObjectID}" target="blank" ><b>{!$Label.objcnvtr__PGLBL_View}</b></apex:outputLink>
+                    <apex:outputText >&nbsp;&nbsp;</apex:outputText>
+                    <apex:outputLink value="/{!WrapperResult.ObjectID}" target="blank">{!WrapperResult.ObjectID}</apex:outputLink>
+                </apex:column>      
+            </apex:pageBlocktable>
+<!--            <script>
+                if('{!IsUpdateRecord}' == 'true')
+                    {DoUpdateRecord();}
+            </script>-->
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

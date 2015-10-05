@@ -1,0 +1,2 @@
+<apex:page sidebar="true" showHeader="true" standardStylesheets="false" action="{!URLFOR($Resource.sfcloud__ProductBundle)}" title="Product Bundle Documentation">
+</apex:page>

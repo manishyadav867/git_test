@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <customHelpPage>ProductBundle_Documentation</customHelpPage>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>This object groups Products/Services into one package. Once approved, they can be added to Opportunities or Quotes as individual line item or as a Bundle.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableEnhancedLookup>true</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fieldSets>
+        <fullName>FieldsToDisplay</fullName>
+        <availableFields>
+            <field>Cost__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>End_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Margin__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Product_Code__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Segment__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <availableFields>
+            <field>Start_Date__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </availableFields>
+        <description>Choose custom fields to display while 
+1. Adding Bundles to Opportunity or Quote (Add Bundle/Products button)
+2. Creating Bundles on the fly (Create Bundle button)</description>
+        <label>FieldsToDisplay</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>FieldsToFilter</fullName>
+        <description>Choose custom fields to filter by while adding Bundles to Opportunity or Quote.</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Product_Code__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Segment__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>FieldsToFilter</label>
+    </fieldSets>
+    <fieldSets>
+        <fullName>FieldsToSort</fullName>
+        <description>Choose custom fields to sort by while adding Bundles to Opportunity or Quote.</description>
+        <displayedFields>
+            <field>Product_Code__c</field>
+            <isFieldManaged>true</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <label>FieldsToSort</label>
+    </fieldSets>
+    <fields>
+        <fullName>Bundle_Items__c</fullName>
+        <defaultValue>&quot;Create formula field with API name &apos;Concise_View__c&apos; on &apos;Bundle Line Item&apos; object.&quot;</defaultValue>
+        <deprecated>false</deprecated>
+        <description>List of all product names in the Bundle</description>
+        <externalId>false</externalId>
+        <inlineHelpText>List of all product names in the Bundle</inlineHelpText>
+        <label>Bundle Items</label>
+        <length>32768</length>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Total Bundle cost</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Total Bundle cost</inlineHelpText>
+        <label>Cost</label>
+        <summarizedField>Product_Line_Item__c.Total_Cost__c</summarizedField>
+        <summaryForeignKey>Product_Line_Item__c.Product_Bundle__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Description__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Product Bundle Description</description>
+        <externalId>false</externalId>
+        <label>Description</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>2</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Discount__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(List_Price__c &gt;0, ( List_Price__c  -  Sale_Price__c)/List_Price__c, 0.00)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Discount (%)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>End_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Product Bundle End Date</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Bundle end date. Keep this field blank if you are not running a promotion.</inlineHelpText>
+        <label>End Date</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Has_Line_Item__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Count of Bundle Line Items</description>
+        <externalId>false</externalId>
+        <label># of Line Items</label>
+        <summaryForeignKey>Product_Line_Item__c.Product_Bundle__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>List_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Product Bundle List Price</description>
+        <externalId>false</externalId>
+        <label>List Price</label>
+        <summarizedField>Product_Line_Item__c.Total_Unit_Price__c</summarizedField>
+        <summaryForeignKey>Product_Line_Item__c.Product_Bundle__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Margin__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Bundle cost</description>
+        <externalId>false</externalId>
+        <formula>IF( 
+  Sale_Price__c !=0, 
+  1-(Cost__c / Sale_Price__c), 
+  0 
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <inlineHelpText>Bundle cost</inlineHelpText>
+        <label>Margin (%)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Price_Book__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Lookup to standard Price Book object</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Select Price Book</inlineHelpText>
+        <label>Price Book</label>
+        <referenceTo>Pricebook2</referenceTo>
+        <relationshipLabel>Bundles</relationshipLabel>
+        <relationshipName>Bundles</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Pricebook__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>(Deprecated) Lookup to custom Pricebook object</description>
+        <externalId>false</externalId>
+        <inlineHelpText>(Deprecated) Bundle line items will reference this Pricebook</inlineHelpText>
+        <label>(Deprecated) Pricebook</label>
+        <referenceTo>Pricebook__c</referenceTo>
+        <relationshipLabel>Bundles</relationshipLabel>
+        <relationshipName>Bundles</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Product_Code__c</fullName>
+        <deprecated>false</deprecated>
+        <displayFormat>SKU-{0000}</displayFormat>
+        <externalId>false</externalId>
+        <label>Product Code</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>AutoNumber</type>
+    </fields>
+    <fields>
+        <fullName>Sale_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Product Bundle Amount</description>
+        <externalId>false</externalId>
+        <label>Sale Price</label>
+        <summarizedField>Product_Line_Item__c.Total_Price__c</summarizedField>
+        <summaryForeignKey>Product_Line_Item__c.Product_Bundle__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Segment__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Choose Market/Customer segment this Bundle applies to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Choose Market/Customer segment this Bundle applies to. Keep this field blank if there is no restriction on Bundle.</inlineHelpText>
+        <label>Segment</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Segment A</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Segment B</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Segment C</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Start_Date__c</fullName>
+        <defaultValue>Today()</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Product Bundle Start Date</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Bundle start date. Keep this field blank if you want Bundle to be available immediately.</inlineHelpText>
+        <label>Start Date</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Product Bundle Status</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Draft -- new / recalled Bundle.
+
+In Review -- Bundle is in the  approval process.
+
+Approved -- Only approved Bundles can be added to Opportunities or Quotes.
+
+Rejected -- Bundle is rejected.</inlineHelpText>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Draft</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>In Review</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Approved</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Bundle</label>
+    <listViews>
+        <fullName>Approved_Bundles</fullName>
+        <columns>NAME</columns>
+        <columns>Description__c</columns>
+        <columns>Bundle_Items__c</columns>
+        <columns>Segment__c</columns>
+        <columns>Price_Book__c</columns>
+        <columns>Start_Date__c</columns>
+        <columns>End_Date__c</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>CREATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </filters>
+        <label>Approved Bundles</label>
+    </listViews>
+    <listViews>
+        <fullName>Bundles_in_approval</fullName>
+        <columns>NAME</columns>
+        <columns>Description__c</columns>
+        <columns>Bundle_Items__c</columns>
+        <columns>Segment__c</columns>
+        <columns>Price_Book__c</columns>
+        <columns>Start_Date__c</columns>
+        <columns>End_Date__c</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>CREATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Rejected</value>
+        </filters>
+        <label>Bundles in approval</label>
+    </listViews>
+    <listViews>
+        <fullName>Rejected_Bundles</fullName>
+        <columns>NAME</columns>
+        <columns>Description__c</columns>
+        <columns>Bundle_Items__c</columns>
+        <columns>Segment__c</columns>
+        <columns>Price_Book__c</columns>
+        <columns>Start_Date__c</columns>
+        <columns>End_Date__c</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>CREATEDBY_USER</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Rejected</value>
+        </filters>
+        <label>Rejected Bundles</label>
+    </listViews>
+    <nameField>
+        <label>Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Bundles</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Description__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Status__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Price_Book__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Segment__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Bundle_Items__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>List_Price__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Sale_Price__c</customTabListAdditionalFields>
+        <listViewButtons>Refresh_Multiple_Bundles</listViewButtons>
+        <lookupDialogsAdditionalFields>Description__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Status__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Price_Book__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Segment__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Bundle_Items__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>List_Price__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Sale_Price__c</lookupDialogsAdditionalFields>
+        <lookupFilterFields>NAME</lookupFilterFields>
+        <lookupFilterFields>Product_Code__c</lookupFilterFields>
+        <lookupFilterFields>Status__c</lookupFilterFields>
+        <lookupFilterFields>Price_Book__c</lookupFilterFields>
+        <lookupFilterFields>Segment__c</lookupFilterFields>
+        <lookupFilterFields>End_Date__c</lookupFilterFields>
+        <lookupPhoneDialogsAdditionalFields>Description__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Status__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Price_Book__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Segment__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Bundle_Items__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>List_Price__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Sale_Price__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Product_Code__c</searchFilterFields>
+        <searchFilterFields>Status__c</searchFilterFields>
+        <searchFilterFields>Price_Book__c</searchFilterFields>
+        <searchFilterFields>Segment__c</searchFilterFields>
+        <searchFilterFields>Start_Date__c</searchFilterFields>
+        <searchFilterFields>End_Date__c</searchFilterFields>
+        <searchResultsAdditionalFields>Description__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Price_Book__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Segment__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Bundle_Items__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>List_Price__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>Sale_Price__c</searchResultsAdditionalFields>
+        <searchResultsCustomButtons>Refresh_Multiple_Bundles</searchResultsCustomButtons>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>isDateValid</fullName>
+        <active>true</active>
+        <description>Validate Start and End Dates</description>
+        <errorConditionFormula>Start_Date__c &gt;  End_Date__c</errorConditionFormula>
+        <errorDisplayField>Start_Date__c</errorDisplayField>
+        <errorMessage>Start date cannot be more than End date.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>isPricebookChanged</fullName>
+        <active>true</active>
+        <description>Pricebook cannot be updated if line item exists.</description>
+        <errorConditionFormula>AND(
+   Has_Line_Item__c &gt; 0,
+   ISCHANGED( Price_Book__c ),
+   NOT ISBLANK( PRIORVALUE(Price_Book__c ) )
+)</errorConditionFormula>
+        <errorDisplayField>Price_Book__c</errorDisplayField>
+        <errorMessage>Please delete line items before updating the pricebook OR 
+Clone existing record which will allow you to update the pricebook.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>isSegmentChanged</fullName>
+        <active>false</active>
+        <description>Segment cannot be changed if line item exists.</description>
+        <errorConditionFormula>AND(
+   Has_Line_Item__c &gt; 0,
+   ISCHANGED( Segment__c ),
+   NOT ISBLANK( PRIORVALUE(Segment__c ) )
+)</errorConditionFormula>
+        <errorDisplayField>Segment__c</errorDisplayField>
+        <errorMessage>Please delete line items before updating the segment.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Clone</fullName>
+        <availability>online</availability>
+        <description>Clones Bundle along with line items</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Clone with Line Items</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)}
+
+window.top.location.href = &apos;/apex/sfcloud__ProductBundle_Page?wrapMassAction=1&amp;scontrolCaching=1&amp;id={!Product_Bundle__c.Id}&amp;action=Clone&apos;;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Generate_Product</fullName>
+        <availability>online</availability>
+        <description>Generate a product from Bundle, so Sales can add that as Opportunity Product.</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Generate Product</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+if({!Product_Bundle__c.Has_Line_Item__c}&gt;0) { 
+
+ if(confirm(&apos;Did you know that you do not need to generate a product, if you want to add bundle items as individual opportunity or quote line items.\n\nPlease see documentation (pg 9, 10) for more info.\n\nAre you sure you want to generate a product?&apos;)){
+
+   //Construct VF URL 
+   var queryString = new Array(); 
+   queryString[0] = &apos;{!Product_Bundle__c.Id}&apos;; 
+   queryString[1] = &apos;CreateProduct&apos;; 
+   queryString[2] = &apos;none&apos;; 
+   //alert(queryString); 
+   var createProduct= &apos;/apex/sfcloud__ProductBundle_ListButton?queryString=&apos; + queryString ; 
+
+   //IRedirect to VF to create Product 
+   window.location = createProduct; 
+ }
+}
+else {
+   alert(&apos;Please add Products/Services before generating a Bundle Product &apos;);
+}
+
+/*
+if({!Product_Bundle__c.Has_Line_Item__c}&gt;0) { 
+var product= new sforce.SObject(&quot;Product2&quot;);
+
+//Set values
+product.Name = &apos;{!Product_Bundle__c.Name}&apos;;
+product.Description = &apos;{!Product_Bundle__c.Description__c}&apos;;
+product.IsActive = true;
+product.sfcloud__Copied_from_Bundle__c = &apos;{!Product_Bundle__c.Id}&apos;;
+
+//insert new Product
+var result = sforce.connection.create([product]);
+    
+if (result[0].getBoolean(&quot;success&quot;)) {
+   var Id = result[0].id;
+   alert(&apos;New Product created successfully.\nYou will be redirected to add Standard Price(s).&apos;);
+   window.top.location.href = &apos;pbk/addStandardPrice.jsp?id=&apos; +Id+ &apos;&amp;retURL=&apos;+Id;
+} 
+else {
+   alert(&apos;Failed to create new Product &apos; + result[0] );
+}
+}
+else {
+   alert(&apos;Please add Products/Services before generating a Bundle Product &apos;);
+}
+*/</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Refresh_Multiple_Bundles</fullName>
+        <availability>online</availability>
+        <description>Refresh pricing for multiple Bundles.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Refresh</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+//Get records selected by the user
+var selectedRecords= {!GETRECORDIDS( $ObjectType.Product_Bundle__c)}; 
+
+if (selectedRecords[0] == null) { 
+  alert(&quot;Please select Bundle(s) to refresh. Click Action to select all Bundles.&quot;) 
+} 
+else { 
+
+  if(confirm(&apos;This action will update selected Bundles with latest pricing and cost. Are you sure?&apos;)){
+    //alert(&apos;Refreshing Bundle(s) with latest pricing may take few minutes, depending on when they were last refreshed.&apos;);
+    //alert(selectedRecords[0].substring(0,3));
+
+    var retURL = selectedRecords[0].substring(0,3);
+    var selectedRecords = selectedRecords.toString().replace(/,/g, &quot;-&quot;);
+
+    window.location = &apos;/apex/sfcloud__ProductBundle_Page?wrapMassAction=1&amp;scontrolCaching=1&amp;id=&apos; +retURL+ &apos;&amp;action=Refresh&amp;selectedRecords=&apos; + selectedRecords; 
+  }
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Submit_for_Approval</fullName>
+        <availability>online</availability>
+        <description>Make sure Bundle is not already approved and has line items before submitting for approval.</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Submit for Approval</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)}
+
+var status = &apos;{!Product_Bundle__c.Status__c}&apos;;
+
+if(status==&apos;Approved&apos; || status==&apos;In Review&apos;){
+   alert(&apos;The Bundle is either &quot;In Review&quot; or already &quot;Approved&quot;. Cannot submit for approval at this point.\n\nPlease contact your System Administrator for further assistance.&apos;);
+}
+else if({!Product_Bundle__c.Has_Line_Item__c}&lt;1){
+   alert(&apos;Please add few Products/Services before submitting for Approval&apos;);
+} 
+else{
+   window.top.location.href = &apos;/p/process/Submit?retURL=/{!Product_Bundle__c.Id}&amp;id={!Product_Bundle__c.Id}&apos;;
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Update_Bundle_with_latest_pricing</fullName>
+        <availability>online</availability>
+        <description>Refresh pricing for current Bundle.</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Refresh</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+if(confirm(&apos;This action will update all Bundle items with latest pricing and cost. Are you sure?&apos;)){
+if({!Product_Bundle__c.Has_Line_Item__c}&gt;0) { 
+   window.top.location.href = &apos;/apex/sfcloud__ProductBundle_Page?wrapMassAction=1&amp;scontrolCaching=1&amp;id={!Product_Bundle__c.Id}&amp;action=Refresh&amp;selectedRecords={!Product_Bundle__c.Id}&apos;;
+}
+else{
+   alert(&apos;No Products/Services found on this Bundle&apos;);
+}
+}</url>
+    </webLinks>
+</CustomObject>

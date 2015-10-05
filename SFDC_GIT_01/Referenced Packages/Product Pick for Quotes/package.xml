@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Product Pick for Quotes</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <namespacePrefix>hcqpp</namespacePrefix>
+    <types>
+        <members>H2CProductPickQuoteAOAdminSettingsCon</members>
+        <members>H2CProductPickQuoteAOCon</members>
+        <members>H2CProductPickQuoteAOInstall</members>
+        <members>H2CProductPickQuoteAOTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>H2CProductPickQuoteAO</members>
+        <members>H2CProductPickQuoteAOAdminSettings</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>QPSettings__c.ColR_Discount__c</members>
+        <members>QPSettings__c.ColR_SubTotal__c</members>
+        <members>QPSettings__c.ColR_Total__c</members>
+        <members>QPSettings__c.Main_ColNum__c</members>
+        <members>QPSettings__c.SettingFieldSetName__c</members>
+        <members>Quote.PriceBookId__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>QPSettings__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Quote_Product_Pick_Admin</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Quote.ProductPick_Quote_FS</members>
+        <members>QuoteLineItem.ProductPick_QLI_FS</members>
+        <name>FieldSet</name>
+    </types>
+    <types>
+        <members>QuoteLineItem.Product_Pick</members>
+        <name>WebLink</name>
+    </types>
+    <version>33.0</version>
+</Package>

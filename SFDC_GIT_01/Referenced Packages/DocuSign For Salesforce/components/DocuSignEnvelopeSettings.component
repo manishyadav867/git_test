@@ -1,0 +1,183 @@
+<apex:component controller="dsfs.DocuSignEnvelopeSettingsController" allowDml="true">
+<apex:pageblock title="Manage DocuSign Envelope Settings">
+    <apex:outputPanel layout="block" rendered="{!HasDocuSignAccount == false}">
+        <apex:pageBlockSection title="Account Information" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Your DocuSign Account is not yet configured. 
+                    You cannot manage envelope settings until Account configuration has been completed." />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" rendered="{!HasDocuSignAccount}">
+        <apex:pageBlockSection columns="2" title="Email Settings" collapsible="False" id="pnlEmailSettings"> 
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Default Email Subject" for="txtEmailSubject" />
+                <apex:inputText value="{!EmailSubject}" id="txtEmailSubject" required="true" style="width: 500px" maxlength="100" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Hide Email Subject Field" for="cbHideEmailSubject" />
+                <apex:inputCheckbox id="cbHideEmailSubject" selected="{!HideEmailSubject}" value="{!HideEmailSubject}" />
+            </apex:pageBlockSectionItem>           
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Default Email Message" for="txtEmailBody" />
+                <apex:inputTextarea value="{!EmailBody}" id="txtEmailBody" rows="5" cols="90" style="width: 500px" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Hide Email Message Field" for="cbHideEmailMessage" />
+                <apex:inputCheckbox id="cbHideEmailMessage" selected="{!HideEmailMessage}" value="{!HideEmailMessage}" />
+            </apex:pageBlockSectionItem>             
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="1" title="Recipient Role Settings" collapsible="False" id="pnlRoleSettings"> 
+            <apex:pageBlockSectionItem >
+            <apex:outputLabel value="Enter/remove default roles." />
+            <apex:outputPanel >
+            Roles are used to map default anchor tabs within your documents to a recipient when sending with DocuSign.
+            <table border="0" cellspacing="0" cellpadding="0">
+            <tr><td style="padding-left: 20px">
+            <li>Each role name must be entered on a separate line.</li>
+            <li>Order of the roles determines which anchor tab set to map to.</li>
+            <li>The first role in the list will map to the '1' tabs within the document, second role to the '2' tabs, etc.</li>
+            <li>
+            Example: if the first role is 'Customer', the recipient tied to the role will map to the \s1\, \i1\, etc. tabs within the documents.
+            </li>
+            <li>
+            Learn more: 
+            <apex:outputLink target="_new" value="https://www.docusign.com/support/salesforce/Using_Anchor_Tags.pdf">
+            Using Anchor Tags to place Signature and data collection locations in your documents.
+            </apex:outputLink>
+            </li>
+            </td></tr></table>
+            </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Role Names" />
+                <apex:inputTextarea value="{!RoleNames}" id="txtRoles" rows="8" cols="30" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="2" title="Send Settings" collapsible="False" id="pnlSendSettings"> 
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Hide the Send Now button" for="cbHideSendNow" />
+                <apex:inputCheckbox id="cbHideSendNow" selected="{!HideSendNow}" value="{!HideSendNow}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Hide the Tag button" for="cbHideTag" />
+                <apex:inputCheckbox id="cbHideTag" selected="{!HideTag}" value="{!HideTag}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Hide the Remind and Expire Settings" for="cbHideRemind" />
+                <apex:inputCheckbox id="cbHideRemind" selected="{!HideRemindExpire}" value="{!HideRemindExpire}" />
+            </apex:pageBlockSectionItem>                  
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Default Send Reminder in N Day(s)" for="txtReminderDefault" />
+                <apex:inputText id="txtReminderDefault" maxlength="3" value="{!ReminderDays}" style="width: 50px" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Default Repeat Reminder in N Day(s)" for="txtReminderRepeatDefault" />
+                <apex:inputText id="txtReminderRepeatDefault" maxlength="3" value="{!ReminderRepeat}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                  <apex:outputLabel value="Enable Salesforce Callout Limit Compensation" for="cbFetchDocuments" />
+                <apex:inputCheckbox id="cbFetchDocuments" value="{!FetchDocuments}" />           
+            </apex:pageBlockSectionItem>          
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Default Expire Envelope in N day(s)" for="txtExpireDefault" />
+                <apex:inputText id="txtExpireDefault" maxlength="3" value="{!ExpireDays}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem > 
+            </apex:pageBlockSectionItem>             
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Default Warn of expiration in N day(s) prior" for="txtWarnExpireDefault" />
+                <apex:inputText id="txtWarnExpireDefault" maxlength="3" value="{!ExpireWarning}" />
+            </apex:pageBlockSectionItem>                  
+        </apex:pageBlockSection>
+        <apex:pageBlockSection columns="1" title="Chatter Settings" collapsible="false" id="pnlChatterSettings"> 
+           <apex:pageBlockSectionItem >
+                <apex:outputLabel value="DocuSign Chatter" for="selChatterSetting" />
+                <apex:selectList value="{!ChatterSetting}" id="selChatterSetting" 
+                    multiselect="false" size="1"> 
+                    <apex:selectOptions value="{!ChatterSettingItems}"/>
+                </apex:selectList> 
+           </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Hide Chatter Settings" for="cbHideChatter" />
+                <apex:inputCheckbox id="cbHideChatter" value="{!HideChatter}" />
+            </apex:pageBlockSectionItem> 
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Chatter on these Envelope Events" for="cbEnvChatter" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Sent" for="cbEnvSent" />
+                    <apex:panelGrid columns="2"> 
+                        <apex:inputCheckbox id="cbEnvSent"  value="{!ChatterEnvSent}" /> 
+                        <apex:inputText value="{!ChatterEnvSentText}" id="txtEnvSentText" required="true" style="width: 500px" maxlength="200" />                        
+                    </apex:panelGrid>                             
+            </apex:pageBlockSectionItem>         
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Delivered" for="cbEnvDelivered" /> 
+                    <apex:panelGrid columns="2">                     
+                        <apex:inputCheckbox id="cbEnvDelivered"  value="{!ChatterEnvDelivered}" />   
+                         <apex:inputText value="{!ChatterEnvDeliveredText}" id="txtEnvDeliveredText" required="true" style="width: 500px" maxlength="200" />                  
+                     </apex:panelGrid>                              
+            </apex:pageBlockSectionItem>            
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Completed" for="cbEnvCompleted" /> 
+                    <apex:panelGrid columns="2">                       
+                        <apex:inputCheckbox id="cbEnvCompleted"  value="{!ChatterEnvCompleted}" /> 
+                        <apex:inputText value="{!ChatterEnvCompletedText}" id="txtEnvCompletedText" required="true" style="width: 500px" maxlength="200" />                             
+                     </apex:panelGrid>                              
+            </apex:pageBlockSectionItem>            
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Declined" for="cbEnvDeclined" /> 
+                    <apex:panelGrid columns="2">                        
+                        <apex:inputCheckbox id="cbEnvDeclined"  value="{!ChatterEnvDeclined}" /> 
+                        <apex:inputText value="{!ChatterEnvDeclinedText}" id="txtEnvDeclinedText" required="true" style="width: 500px" maxlength="200" /> 
+                    </apex:panelGrid>              
+            </apex:pageBlockSectionItem>             
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Voided" for="cbEnvVoided" /> 
+                     <apex:panelGrid columns="2">                     
+                        <apex:inputCheckbox id="cbEnvVoided"  value="{!ChatterEnvVoided}" /> 
+                        <apex:inputText value="{!ChatterEnvVoidedText}" id="txtEnvVoidedText" required="true" style="width: 500px" maxlength="200" /> 
+                    </apex:panelGrid>                                      
+            </apex:pageBlockSectionItem>                                                                                   
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Chatter on these Recipient Events" for="cbRecipChatter" />
+
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >  
+              <apex:outputLabel value="Sent" for="cbRecipSent" /> 
+              <apex:panelGrid columns="2">
+                  <apex:inputCheckbox id="cbRecipSent" value="{!ChatterRecipSent}"  /> 
+                  <apex:inputText id="txtRecipSentText" value="{!ChatterRecipSentText}"  required="true" style="width: 500px" maxlength="200" />
+              </apex:panelGrid>
+             </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem >  
+              <apex:outputLabel value="Delivered" for="cbRecipDelivered" /> 
+              <apex:panelGrid columns="2">
+                  <apex:inputCheckbox id="cbRecipDelivered" value="{!ChatterRecipDelivered}"  /> 
+                  <apex:inputText id="txtRecipDeliveredText" value="{!ChatterRecipDeliveredText}" required="true" style="width: 500px" maxlength="200" />
+              </apex:panelGrid>
+             </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >  
+              <apex:outputLabel value="Signed" for="cbRecipSigned" /> 
+              <apex:panelGrid columns="2">
+                  <apex:inputCheckbox id="cbRecipSigned" value="{!ChatterRecipSigned}"  /> 
+                  <apex:inputText id="txtRecipSingnedText" value="{!ChatterRecipSignedText}" required="true" style="width: 500px" maxlength="200" />
+              </apex:panelGrid>
+            </apex:pageBlockSectionItem>         
+            <apex:pageBlockSectionItem >  
+              <apex:outputLabel value="Declined" for="cbRecipDeclined" /> 
+              <apex:panelGrid columns="2">
+                  <apex:inputCheckbox id="cbRecipDeclined" value="{!ChatterRecipDeclined}"  /> 
+                  <apex:inputText id="txtRecipDeclinedText" value="{!ChatterRecipDeclinedText}" required="true" style="width: 500px" maxlength="200" />
+              </apex:panelGrid>
+            </apex:pageBlockSectionItem>                                        
+        </apex:pageBlockSection>       
+    </apex:outputPanel>
+    <apex:pageBlockButtons >
+        <apex:commandButton id="btnSave" value="Save" action="{!Save}" 
+            disabled="{!IsCurrentUserAdmin==false}" 
+            rendered="{!HasDocuSignAccount}" />
+    </apex:pageBlockButtons>
+</apex:pageBlock>
+</apex:component>

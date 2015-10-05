@@ -1,0 +1,91 @@
+<apex:page tabstyle="Quote_Product_Pick_Admin__tab" title="Apples" controller="hcqpp.H2CProductPickQuoteAOAdminSettingsCon">
+<apex:sectionHeader title="Quote Product Pick" subtitle="Administrator Setup"/>
+    <apex:pageblock >
+
+         <apex:pageblockSection title="Getting Started" collapsible="false" columns="1">
+    <apex:pageMessages id="pageMsgs"></apex:pageMessages>
+
+
+
+            <br/>
+            <a  style="font-weight:bold"  href="/ui/setup/layout/PageLayouts?type=Quote&setupid=QuoteLayouts&retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DQuote">Add the Product Pick button:</a><br/>
+            
+            Your salesforce.com admin will need to add the "Pick Product" button to all the page layouts for those using the app.
+            <ol>
+            <li>Setup | Customize | Quotes | Page Layouts | Click Edit next to your layout</li>
+            <li>Scroll down to the Products related list</li>
+              
+            <li>Scroll down to the Products related list and click the wrench icon to edit the Related List Properties of the Product list</li>
+            
+            <li>Select the Pick Product button and Add </li>
+             
+            
+            <li>The Pick Product button will now be added</li>
+            </ol>
+
+            <br/>
+
+        
+            <b>Add Product Pick Visualforce page access</b>   <br/>    
+            Click Your Name | Setup | Administration Setup | Manage Users | Profile | Select the profile of your users | Enabled Visualforce Page Access | Edit | add the following pages:<br/>
+            <ul>
+                <li>H2CProductPick</li>
+            </ul> 
+            
+        </apex:pageblockSection>
+
+
+		 <apex:form >
+	        <apex:pageBlockSection title="Show/Hide Calculated Fields" collapsible="false" columns="1">	       	       				
+	        	<apex:inputField label="Show Discount Field" value="{!gQPSettings.hcqpp__ColR_Discount__c}"/>
+	        	<apex:inputField label="Show SubTotal Field" value="{!gQPSettings.hcqpp__ColR_SubTotal__c}"/>
+	        	<apex:inputField label="Show Total Field" value="{!gQPSettings.hcqpp__ColR_Total__c}"/>	
+	        		
+	        	 <apex:pageBlockSectionItem >
+		        	 <apex:outputlabel value="Layout Orientation"></apex:outputlabel>
+		        	 <apex:selectList multiselect="false" size="1" value="{!gMain_ColNum}">
+	                        <apex:selectOptions value="{!gMain_ColNumSelectOptions}"/>
+	                 </apex:selectList>
+				</apex:pageBlockSectionItem>  
+				
+	        	<apex:commandButton value="Save Settings" action="{!doSave}"/> 	
+	        </apex:pageblockSection>
+	       	<apex:pageBlockSection title="Configuring the fields on the Product Picker" collapsible="false" columns="1">       
+	        You can configure the fields on the Product Pick page. There is a standard set of fields you can add/remove or you can create your own custom fields from the Quote, Quote line items and product objects
+	        i.e. For your sales teams add the product description field  to make it easier for them to select products.  Or add the date field to the product editing grid.
+	        
+	        <ol>
+	        <li>
+	            <a style="font-weight:bold"  href="/p/setup/custent/FieldSetListUI/d?&tableEnumOrId=Quote&setupid=QuoteFieldSets">ProductPick Quote FS</a>: This controls the fields that appear on the picker screen about the original Quote<br/>
+	            <b>Setup | Customize | Quotes | Field Sets | Click Edit ProductPick Quote FS.</b><br/> Then click and drag fields from the meeting object down into your field set.
+	            <br/><br/>
+	        </li>
+	         
+	        <li>
+	            <a style="font-weight:bold"  href="/p/setup/custent/FieldSetListUI/d?&tableEnumOrId=QuoteLineItem&setupid=QuoteLineItemFieldSets">ProductPick QLI FS</a>: This controls the fields that appear on the Configure pricing grid<br/>
+	            <b>Setup | Customize | Quotes | Quote Line Items | Field Sets | Click Edit ProductPick QLI FS.</b> <br/>Then click and drag fields from the meeting object down into your field set.
+	            <br/><br/>
+	        </li>
+	        
+	        
+	        <li>
+	            <a style="font-weight:bold"  href="/p/setup/custent/FieldSetListUI/d?tableEnumOrId=Product2&setupid=Product2FieldSets">ProductPick Product Available FS</a>: This controls the fields that appear available to be selected<br/>
+	            <b>Setup | Customize | Products | Field Sets | Click Edit ProductPick Product Available FS.</b><br/> Then click and drag fields from the meeting object down into your field set.
+	            <br/><br/>
+	        </li>
+	        
+	        <li>
+	            <a style="font-weight:bold"  href="/p/setup/custent/FieldSetListUI/d?tableEnumOrId=Product2&setupid=Product2FieldSets">ProductPick Product Search FS</a>: This controls the fields that are used for searching<br/>
+	            <b>Setup | Customize | Products | Field Sets | Click Edit ProductPick Product Search FS.</b> <br/>Then click and drag fields from the meeting object down into your field set.  Note that you can only use text fields and picklists in the drop downs.
+	            <br/><br/>
+	        </li>       
+	       </ol>
+	                
+	        </apex:pageBlockSection>
+        </apex:form>
+       <apex:pageblockSection title="Product Pick By Hitch2Cloud" collapsible="false" columns="1">
+            <a href="mailto:info@hitch2cloud.com?subject=Hitch2Cloud info: {!$Organization.Name}">Contact Info at Hitch2Cloud, the makers of Product Pick</a>                        
+       </apex:pageblockSection> 
+    </apex:pageBlock>
+    
+</apex:page>

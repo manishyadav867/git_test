@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <fullName>Create_PDF_For_DocuSign</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>DEPRECATED_Create PDF For DocuSign</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>// Deprecated code to save quote and send to docusign, but only works if more than one quote template is available
+docuSignTheQuote = false;
+var sfCancelfunc = QuoteTemplateLookupOverlay.cancelOverlay;
+function SendToDocuSign(responseText)
+{
+var responseData;
+try { responseData=Util.evalAjaxServletOutput(responseText); }catch(e){window.location.reload();}
+if(responseData&amp;&amp;responseData[QuotePDFPreview.ajaxSaveError])
+{
+   this.displaySaveErrors(responseData[QuotePDFPreview.ajaxSaveError]);
+} 
+else 
+{
+  var saveScn=document.getElementById(this.embedParentId);
+   if(saveScn) {saveScn.style.visibility=&quot;hidden&quot;;}
+   sfdcPage.getDialogById(this.dialogId).hide();
+   if (docuSignTheQuote) 
+   {
+      document.location.href=&quot;/apex/dfsq__DocuSign_SendQuote?id={!Quote.Id}&quot;;
+   }
+   else 
+   {
+window.location=responseData[QuotePDFPreview.ajaxSaveSrc]?responseData[QuotePDFPreview.ajaxSaveSrc]:window.location;
+    }
+}
+docuSignTheQuote = false;
+}
+
+function OnDSOkCancelOverlay(overlayId,inputElementId,btnId,hiddenElementId,cancel)
+{
+var pdfOverlay = QuotePDFPreview.quotePDFObjs[&apos;quotePDFOverlay&apos;];
+QuotePDFPreview.prototype.handleSaveResponse=SendToDocuSign;
+pdfOverlay.dialog.buttonContents = &apos;&lt;input value=&quot;Save to Quote&quot; class=&quot;btn&quot; name=&quot;save&quot; onclick=&quot;QuotePDFPreview.getQuotePDFObject(\&apos;quotePDFOverlay\&apos;).savePDF(\&apos;0\&apos;,\&apos;0\&apos;);&quot; title=&quot;Save to Quote&quot; type=&quot;button&quot; /&gt;&lt;input value=&quot;Save and DocuSign Quote&quot;  class=&quot;btn&quot; name=&quot;saveAndDocuSign&quot; onclick=&quot;docuSignTheQuote  =true;QuotePDFPreview.getQuotePDFObject(\&apos;quotePDFOverlay\&apos;).savePDF(\&apos;0\&apos;,\&apos;0\&apos;);&quot; title=&quot;Save and DocuSign Quote&quot; type=&quot;button&quot; /&gt;&lt;input value=&quot;Cancel&quot; class=&quot;btn&quot; name=&quot;cancel&quot; onclick=&quot;sfdcPage.getDialogById(\&apos;quotePDFOverlay\&apos;).hide();&quot; title=&quot;Cancel&quot; type=&quot;button&quot; /&gt;&apos;;
+
+pdfOverlay.summlid =document.getElementById(hiddenElementId).value;
+pdfOverlay.setSavable(true);
+pdfOverlay.setContents(&apos;/quote/quoteTemplateDataViewer.apexp?id={!Quote.Id}&apos;);
+
+if(cancel)
+{
+   dialog.cancel();
+}
+else
+{
+   dialog.hide();
+}
+document.getElementById(inputElementId).value=&quot;&quot;;
+document.getElementById(hiddenElementId).value=&quot;&quot;;
+QuoteTemplateLookupOverlay.checkBtn(btnId,hiddenElementId);
+QuoteTemplateLookupOverlay.cancelOverlay =  sfCancelfunc;
+};
+
+QuoteTemplateLookupOverlay.cancelOverlay=OnDSOkCancelOverlay;
+OverlayDialogElement.getDialog(&apos;chooseTemplateOverlay&apos;).show();</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Send_with_DocuSign</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Send with DocuSign</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/dfsq__DocuSign_SendQuote?id={!Quote.Id}</url>
+    </webLinks>
+</CustomObject>

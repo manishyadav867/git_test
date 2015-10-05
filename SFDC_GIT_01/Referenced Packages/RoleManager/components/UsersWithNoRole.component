@@ -1,0 +1,128 @@
+<apex:component controller="ConfigRoleMgr.UsersWithNoRoleController" >
+ <style type="text/css">
+  #userblock{
+   display: none;
+  }
+  
+  .visible{
+   display: block !important;
+  }
+ </style>
+ <script type="text/javascript">
+  j$(document).ready(function(){
+    var m_usersNoRoleOpenClose = j$('#userswithnoroleopenclose');
+    
+    j$('#userswithnorole .blockbody').hide();   
+    m_usersNoRoleOpenClose.text('+');
+    
+    m_usersNoRoleOpenClose.click(function(){
+        var usersNoRoleBlockBody = j$('#userswithnorole .blockbody');
+        
+        if(usersNoRoleBlockBody.is(':visible')){
+         usersNoRoleBlockBody.hide();
+         j$(this).text('+');
+        }
+        else{
+         usersNoRoleBlockBody.show();
+         j$(this).text('-');     
+        }
+      });
+      
+   j$('#movebox').click(function(){
+    //alert(j$(this).parent().parent().css('right'));
+    if(j$(this).parent().parent().css('right')=='0px'){
+     j$(this).parent().parent().css('right', 'auto');
+     j$(this).text('»');
+     j$(this).css('float', 'right');
+    }
+    else{
+     j$(this).parent().parent().css('right', '0px');
+     j$(this).css('float', 'left');
+     j$(this).text('«');
+    }
+    return 0;
+   });
+ 
+      
+   ConfigRoleMgr.UsersWithNoRoleController.searchUsers('', drawUsers);  
+  });
+  
+  
+  var drawUsers = function(result, event){
+   //alert(event.message);
+   if(event.type == 'exception') {
+    alert(event.message);
+   }
+   else {
+    users = result;
+    var innerHTML = '';
+    j$('#userblockwrapper').html('');
+    for(i = 0; i < result.length; i++) {
+     if(result[i].Title===undefined){
+      result[i].Title='';
+     }
+     if(result[i].Division===undefined){
+      result[i].Division='';
+     }
+     if(result[i].Department===undefined){
+      result[i].Department='';
+     }          
+     
+     var clone = j$('#userblock').clone();
+     clone.attr('rel', result[i].Id);
+     clone.attr('id', 'userblock_'+result[i].Id);
+     clone.addClass('visible');
+     clone.find('img').attr('src', result[i].SmallPhotoUrl);
+     clone.find('img').attr('alt', result[i].Name);
+     clone.find('.username').text(result[i].Name);
+     clone.find('.usertitle').text(result[i].Title);
+     clone.find('.userdivision').text(result[i].Division);
+     clone.find('.userdepartment').text(result[i].Department);
+     j$('#userblockwrapper').append(clone);
+     
+   }
+   
+   j$("#userblockwrapper .userDrag").draggable({ containment: "#visualization", scroll:true, revert:'invalid', zIndex: 50000, cursor: 'crosshair',helper: 'clone',appendTo: 'body'});
+  }
+ }
+ </script>
+ <div id="userswithnorole">
+  <div class="blockheader">
+   <a id="movebox" href="#" title="move">&raquo;</a>
+   <h3>Filter by Role:</h3>
+   <select name="rolefilter" id="rolefilter">
+    <option value="ALL">All</option>
+    <apex:repeat value="{!Roles}" var="role">
+     <option value="{!role.Id}">{!role.Name}</option>
+    </apex:repeat>
+   </select>
+   <div id="portal-filters">
+    <h4>Show:</h4>
+    <input type="checkbox" value="Standard" name="Standard" id="standard-filter" checked="checked"/> Standard Users<br />
+    <input type="checkbox" value="Partner" name="Partner" id="partner-filter"/> Partner Portal Users<br />
+    <input type="checkbox" value="Customer" name="Customer"  id="customer-filter"/> Customer Portal Users
+   </div>
+  </div>
+  
+  <div class="blockheader">
+   <h3><span id="userswithnoroleopenclose"></span> Unassigned Users</h3>
+  </div>
+  <div class="blockbody">
+  <div class="searchWrapper">
+    <input type="text" value="" onkeyup="ConfigRoleMgr.UsersWithNoRoleController.searchUsers(this.value, drawUsers);"/> <small>3 chars minimum</small>
+  </div>
+  <div id="userblockwrapper" class="userblockwrapper" > 
+  </div>
+  <div class="dropcell ui-droppable">+</div>
+  </div>
+ </div>
+ <div id="userblock" class="userblock userDrag" rel="">
+     <div class="usersmallphoto">
+        <img class="chartCellIcon" src="" alt=""/>
+     </div>
+     <span class="username"></span>
+     <span class="usertitle"></span>
+     <span class="userdivision"></span>
+     <span class="userdepartment"></span>
+  </div>
+</apex:component>

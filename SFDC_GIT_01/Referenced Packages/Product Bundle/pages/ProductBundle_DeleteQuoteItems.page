@@ -1,0 +1,31 @@
+<apex:page standardController="QuoteLineItem" >
+
+<br/>
+Redirecting...
+<br/>
+<apex:outputField value="{!QuoteLineItem.id}" rendered="false"/>
+<apex:outputField value="{!QuoteLineItem.Quoteid}" rendered="false"/>
+<apex:outputField value="{!QuoteLineItem.sfcloud__Product_Bundle__c}" rendered="false"/>
+<apex:outputField value="{!QuoteLineItem.sfcloud__Product_Bundle__r.Name}" rendered="false"/>
+
+<script>
+    var quoteId = '{!JSINHTMLENCODE(QuoteLineItem.QuoteId)}';
+    var itemId = '{!JSINHTMLENCODE(QuoteLineItem.id)}';
+    var bundleId = '{!JSINHTMLENCODE(QuoteLineItem.sfcloud__Product_Bundle__c)}';
+    var bundleName = '{!JSINHTMLENCODE(QuoteLineItem.sfcloud__Product_Bundle__r.Name)}';
+    //var canDeleteItems = '$Setup.Bundle_CS__c.Can_delete_Bundle_item __c'; Custom setting to let certain users delete bundle items
+    //alert('Quote Id-' +quoteId+ ' Item Id-' +itemId+ ' is part of Bundle ' +bundleName);
+    
+    //Individual bundle items cannot be deleted
+    //if(bundleId!='' && canDeleteItems=='false')
+    if(bundleId!='')
+        if(confirm('This item is part of Bundle "' +bundleName+ '". If you delete this item, all the items belonging to this Bundle will be deleted.\n\nAre you sure?'))
+            window.top.location='/apex/sfcloud__ProductBundle_ListButton?queryString=' +quoteId+ ',DeleteAllItems,' +itemId;
+        else
+            window.top.location='/' +quoteId; 
+    else
+        window.top.location='/apex/sfcloud__ProductBundle_ListButton?queryString=' +quoteId+ ',DeleteThisItem,' +itemId;
+</script>
+
+
+</apex:page>

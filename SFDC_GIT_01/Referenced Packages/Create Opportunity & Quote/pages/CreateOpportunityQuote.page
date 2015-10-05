@@ -1,0 +1,230 @@
+<!--
+    09/16/14    BS    Cancel from a contact returns to the contact record and make cancel immediate - Case 104510 (1.49)
+    09/20/14    BS    Required Quote fields will not prevent a save when creating an opportunity only - Case 103175 (1.50)
+                      Page will not redirect if a save fails due to a required field on Quote
+-->
+
+<apex:page extensions="createoppnquote.CreateOpportunityQuote" standardController="Account" tabStyle="Opportunity" id="pg" title="New Opportunity and Quote">
+<apex:includeScript value="/support/console/29.0/integration.js"/>
+<style>
+.labelCol { width: 8% !important; min-width: 7% !important; }
+.table { display: table; border-collapse: collapse; border-spacing: 0px; }
+.row {display: table-row;}
+.cell {display: table-cell; padding-right: 16px; vertical-align: top;}
+.hidden {display: none;}
+.as { color: #4A4A56; font-weight: bold; font-size: 11px; }
+input[type="text"] { padding: 0px; }
+#pg\:frm\:pb\:pbsQuote .pbSubheader {margin-top: 15px;}
+.spinnerStatus {
+    background-image: url('/img/spinner.gif');
+    width: 16px;
+    height: 16px;
+    background-size: 16px 16px;
+    display: inline-block;
+    vertical-align: top;
+}
+</style>
+<script>
+function disableButtons(){
+    document.getElementById('pg:frm:pb:pbbs:btnSave').style.display = 'none';
+    document.getElementById('pg:frm:pb:pbbs:btnSaveDis').style.display = 'inherit';
+    document.getElementById('pg:frm:pb:pbbs:btnCncl').style.display = 'none';
+    document.getElementById('pg:frm:pb:pbbs:btnCnclDis').style.display = 'inherit';
+    document.getElementById('pg:frm:pb:pbbs:bottom:btnSave').style.display = 'none';
+    document.getElementById('pg:frm:pb:pbbs:bottom:btnSaveDis').style.display = 'inherit';
+    document.getElementById('pg:frm:pb:pbbs:bottom:btnCncl').style.display = 'none';
+    document.getElementById('pg:frm:pb:pbbs:bottom:btnCnclDis').style.display = 'inherit';
+}
+</script>
+
+<apex:sectionHeader title="Create an Opportunity and Quote{!IF(acct.Name != null,' for '+acct.Name,'')}" description="Supply a name to be used for the Opportunity and Quote. The Opportunity name will be prefixed with the Account name. Contact Roles will be created for the Opportunity using the primary and additional contacts. The primary contact will also be associated with the Quote. The quote will be syncing automatically."/>
+<apex:form id="frm" >
+
+    <apex:pageBlock id="pb">
+        
+        <apex:pageBlockButtons id="pbbs">
+            <apex:commandButton id="btnSave" value="Save" action="{!createRecords}" onclick="disableButtons();"/>
+            <apex:commandButton id="btnSaveDis" value="Saving..." disabled="true" style="display:none"/>
+            <apex:commandButton id="btnCncl" value="Cancel" immediate="true" action="{!doCancel}" onclick="cancel();"/>
+            <apex:commandButton id="btnCnclDis" value="Cancel" immediate="true" action="{!doCancel}" disabled="true" style="display:none"/>
+        </apex:pageBlockButtons>
+
+        <apex:pageMessages />
+            
+        <apex:pageBlockSection id="pbs" columns="1" collapsible="false" title="New Opportunity and Quote Information">
+                                       
+            <apex:pageBlockSectionItem >
+                <apex:outputPanel >Name</apex:outputPanel>
+                <apex:outputPanel >
+                    <apex:inputField value="{!opp.name}" required="true"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Primary Contact"/>
+                <apex:outputPanel >
+                    <div class="table">
+                        <div class="row">
+                            <div class="cell"><apex:inputField value="{!roles[0].ContactId}" required="true" onchange="populateAccount(this);"/></div>
+                            <div class="cell as">as</div>
+                            <div class="cell"><apex:inputField value="{!roles[0].Role}"/></div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem id="pbsiAccount">
+                <apex:outputPanel >Account</apex:outputPanel>
+                <apex:outputPanel >
+                    <apex:inputField id="account" value="{!opp.AccountId}" required="true"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>  
+            
+            <apex:pageBlockSectionItem rendered="{!multiCurrency}">
+                <apex:outputLabel value="Currency"/>
+                <apex:inputField value="{!opp[currencyField]}"/>
+            </apex:pageBlockSectionItem>
+            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel style="white-space:nowrap" value="Additional Contacts"/>
+                <apex:outputPanel >
+                    <apex:variable var="rowNum" value="{!0}"/>
+                    <!-- Avoid rerender by use of pre-allocated rows -->
+                    <div id="additional-contacts" class="table">
+                        <apex:repeat value="{!roles}" var="role">
+                            <!-- MD - all of those empty boxes rendered on save should be coming from here -->
+                            <apex:outputPanel layout="none" rendered="{!rowNum <> 0}">
+                                <div class="additional-contact-row row">
+                                    <div class="cell"><apex:inputField id="contactNameInput" onchange="updateContactRows();" onkeyup="updateContactRows();" value="{!role.ContactId}" required="false"/></div>
+                                    <div class="cell as">as</div>
+                                    <div class="cell"><apex:inputField value="{!role.Role}"/></div>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:variable var="rowNum" value="{!rowNum + 1}"/>
+                        </apex:repeat>
+                    </div>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+
+            <apex:pageblockSectionItem rendered="{!haveCampaigns}">
+                <apex:outputLabel value="Primary Campaign Source"/>
+                <apex:inputField value="{!opp['CampaignId']}"/>
+            </apex:pageblockSectionItem>
+            
+            <apex:pageBlockSectionItem id="pbsiCreateQuote" rendered="{!hasQuote}">
+                <apex:outputLabel value="Create Quote"/>
+                <apex:outputPanel layout="none">
+                    <apex:inputCheckbox id="createQuote" value="{!createQuote}" onchange="hideOrShowQuoteFields();"/>
+                    <apex:actionStatus id="spinner" startStyleClass="spinnerStatus"/>
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection id="pbsOpp" title="Opportunity Fields" columns="1">
+            <apex:repeat value="{!$ObjectType.Opportunity.FieldSets.createoppnquote__Fields}" var="oppF">
+                <apex:inputField value="{!opp[oppF]}" required="{!oppF.required}" rendered="{!!CONTAINS(oppF,'.')}"/>
+            </apex:repeat>
+        </apex:pageBlockSection>
+        
+        <apex:outputpanel id="quoFields" rendered="{!hasQuote}">
+            <apex:pageBlockSection id="pbsQuote" rendered="{!createQuote}" title="Quote Fields" columns="1">
+                <apex:repeat value="{!quoteFields}" var="quoF">
+                    <!-- MD - added styleClass so I can find this item later. Couldn't use id due to restriction to literal values; ie. no merge field -->
+                    <apex:inputField styleClass="quoteField_{!quoF}" value="{!quo[quoF]}" required="{!quoF.required}" rendered="{!!CONTAINS(quoF,'.')}"/>
+                </apex:repeat>
+                
+                <apex:outputPanel rendered="{!ISNULL(quoteFields)}">
+                    To display fields on Quote, please contact your system administrator and refer to <a href="http://ic.force.com/coqdocs">http://ic.force.com/coqdocs</a> for configuration assistance.
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+        </apex:outputpanel>
+        
+    </apex:pageBlock>
+
+    <apex:actionFunction immediate="true" name="rerenderQuoFlds" reRender="quoFields" status="spinner">
+        <apex:param name="createQuote" value="true" assignTo="{!createQuote}"/>
+    </apex:actionFunction>
+</apex:form>
+
+<script>
+    function hideOrShowQuoteFields() {
+        var cb = document.getElementById('pg:frm:pb:pbs:pbsiCreateQuote:createQuote');
+        rerenderQuoFlds(cb.checked);
+    }
+
+    if (sforce.console.isInConsole())
+        sforce.console.setTabTitle('Create Opportunity & Quote');
+    
+    function close(result) {
+        sforce.console.closeTab(result.id);
+    }
+
+    function cancel() {
+        if (sforce.console.isInConsole())
+            sforce.console.getFocusedSubtabId(close);
+    }
+    
+    var recordId = '{!quo.Id}' != '' ? '{!quo.Id}' : '{!opp.Id}';
+    if (recordId != '') {
+        if (sforce.console.isInConsole()) {
+            cancel();
+            sforce.console.openPrimaryTab(null, '/' + recordId, true);
+        } else
+            window.location.href = '/' + recordId;
+    }
+    
+    function updateContactRows() {
+        var rows = document.querySelectorAll('.additional-contact-row');
+        for(var i = rows.length - 1; i > 0; --i) {
+            if(rows[i - 1].querySelector('[id$=\\:contactNameInput]').value == '')
+                rows[i].className = rows[i].className.replace(' row', ' hidden');
+            else
+                rows[i].className = rows[i].className.replace(' hidden', ' row'), i = 0;
+        }
+    }
+    updateContactRows();
+    
+    CreateOpportunityQuote = typeof(CreateOpportunityQuote) == 'undefined' ? createoppnquote.CreateOpportunityQuote : CreateOpportunityQuote;
+    
+    function populateAccount(contact) {
+        CreateOpportunityQuote.lookupAccount(lkid(contact).value, function(account) {
+            if(account != null) {
+                var acct = document.getElementById('pg:frm:pb:pbs:pbsiAccount:account');
+                if(acct.value != '') return;
+                acct.value = account.Name;
+                lkid(acct).value = account.Id;
+                lkold(acct).value = account.Name;
+            }
+        });
+        // MD - add here to update the email, phone, fax fields
+        CreateOpportunityQuote.populateContactInfo(lkid(contact).value, function(con) {
+            if(con != null) {
+                var emailField = document.getElementsByClassName('quoteField_Email')[0];
+                var phoneField = document.getElementsByClassName('quoteField_Phone')[0];
+                var faxField   = document.getElementsByClassName('quoteField_Fax'  )[0];
+                if(emailField != null) emailField.value = con.Email == null ? '' : con.Email;
+                if(phoneField != null) phoneField.value = con.Phone == null ? '' : con.Phone;
+                if(faxField   != null) faxField.value   = con.Fax   == null ? '' : con.Fax;
+            }
+        });
+    }
+    
+    function lkid(input) {
+        var elms = input.parentNode.parentNode.childNodes;
+        for(var i = 0; i < elms.length; ++i)
+            if(/.*lkid$/.test(elms[i].id))
+                return elms[i];
+        return null;
+    }
+    
+    function lkold(input) {
+        var elms = input.parentNode.parentNode.childNodes;
+        for(var i = 0; i < elms.length; ++i)
+            if(/.*lkold$/.test(elms[i].id))
+                return elms[i];
+        return null;
+    }
+</script>
+
+</apex:page>

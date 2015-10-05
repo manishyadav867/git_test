@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Bundle_Items__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Concise view of Product generated from a Bundle</description>
+        <externalId>false</externalId>
+        <label>Bundle Items</label>
+        <length>32768</length>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Image__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF(
+   PricebookEntry.Product2.Image_URL__c ==&apos;&apos;,
+  &apos;Image Unavailable&apos;,
+  IMAGE( PricebookEntry.Product2.Image_URL__c , &quot;Image Unavailable&quot;, 75, 75)
+)</formula>
+        <label>Image</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Margin__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF( 
+  TotalPrice!=0, 
+  1-( (Product_Cost__c * Quantity) /  TotalPrice ), 
+  0 
+)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Margin (%)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Product_Bundle__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Product Bundle name if line items are copied from Bundle.</description>
+        <externalId>false</externalId>
+        <label>Copied from Bundle</label>
+        <referenceTo>Product_Bundle__c</referenceTo>
+        <relationshipLabel>Opportunity Product</relationshipLabel>
+        <relationshipName>Opportunity_Product</relationshipName>
+        <required>false</required>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Product_Cost__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>PricebookEntry.Product2.Product_Cost__c</formula>
+        <label>Product Cost</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <type>Currency</type>
+    </fields>
+    <webLinks>
+        <fullName>Add_Bundle</fullName>
+        <availability>online</availability>
+        <description>Add Bundle and/or Products to an Opportunity.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Add Bundle/Products</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+//Check if Opportunity has a Pricebook 
+var connection = sforce.connection; 
+var result = sforce.connection.query(&quot;SELECT Id, Pricebook2Id FROM Opportunity WHERE Id=&apos;{!Opportunity.Id}&apos;&quot;); 
+var opp= result.getArray(&quot;records&quot;); 
+//alert( opp[0][&apos;Pricebook2Id&apos;] );
+
+//Construct VF URL
+var copyBundleItemsToOpportunity = &apos;/apex/sfcloud__ProductBundle_Add?id={!Opportunity.Id}&amp;retURL={!Opportunity.Id}&apos;;
+
+if( opp[0][&apos;Pricebook2Id&apos;] ) {
+   window.top.location.href = copyBundleItemsToOpportunity;
+} 
+else {
+   //Redirect to choose pricebook page
+   window.top.location.href = &apos;/oppitm/choosepricebook.jsp?id={!Opportunity.Id}&amp;retURL=&apos; +copyBundleItemsToOpportunity;
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Add_Bundle_PE</fullName>
+        <availability>online</availability>
+        <description>Add Bundle and/or Products to an Opportunity.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Add Bundle/Products (PE)</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+//Construct VF URL
+var copyBundleItemsToOpportunity = &apos;/apex/sfcloud__ProductBundle_Add?id={!Opportunity.Id}&amp;retURL={!Opportunity.Id}&apos;;
+
+//Redirect the user
+window.top.location.href = copyBundleItemsToOpportunity;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Create_Bundle</fullName>
+        <availability>online</availability>
+        <description>Create Bundle of selected items. Individual items will be replaced by the Bundle.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Create Bundle</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+//Get records selected by the user 
+var selectedRecords= {!GETRECORDIDS( $ObjectType.OpportunityLineItem)}; 
+//alert(selectedRecords);
+
+if (selectedRecords[0] == null || selectedRecords[1] == null) { 
+  alert(&quot;Minimum 2 records must be selected to create Bundle.&quot;) 
+} 
+else { 
+  //Construct VF URL 
+  var queryString = new Array(); 
+  queryString[0] = &apos;{!Opportunity.Id}&apos;; 
+  queryString[1] = &apos;BundleOnTheFly&apos;; 
+  //Replace all comma with hyphen for selectedRecords var, because the code splits queryString by comma, and selectedRecords by hypen 
+  queryString[2] = selectedRecords.toString().replace(/,/g, &quot;-&quot;); 
+
+  var bundleOnTheFly= &apos;/apex/sfcloud__ProductBundle_ListButton?queryString=&apos; + queryString ; 
+
+  //Redirect to VF to create Bundle on the fly 
+  window.top.location.href = bundleOnTheFly;
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Sort_NEW</fullName>
+        <availability>online</availability>
+        <description>By default it sorts in order the Bundle items and individual products are added.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Sort</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/25.0/apex.js&quot;)} 
+
+//alert( &apos;{!Opportunity.Id}&apos; ); 
+
+var callback = {
+   //Call customSort if the request is successful
+   onSuccess: customSort ,
+   //Call queryFailed if the API request fails
+   onFailure: queryFailed 
+};
+
+sforce.connection.query(&quot;SELECT Id FROM OpportunityLineItem WHERE OpportunityId = &apos;{!Opportunity.Id}&apos; ORDER BY SortOrder, Id&quot;, callback) ;
+
+function queryFailed(error, source) {
+   alert(&quot;An error has occurred: &quot; + error);
+}
+
+function customSort(queryResult, source) {
+   if (queryResult.size &gt; 0) {
+      var sortedIds= &quot;&quot;;
+      //Get the records array
+      var records = queryResult.getArray(&apos;records&apos;);
+      //Loop through the records
+      for (var i = 0; i &lt; records.length; i++) {
+         //alert(records[i].Id.substring(0,15))
+         sortedIds += (records[i].Id).substring(0,15) + &quot;,&quot;;
+      }
+      //alert(sortedIds);
+      
+      //Need to post a form to /oppitm/lineitemsort.jsp because this is how SFDC does it but there is not direct API to do the sorting
+      var form = document.createElement(&quot;form&quot;); 
+      form.setAttribute(&quot;method&quot;, &quot;post&quot;); 
+      form.setAttribute(&quot;action&quot;, &quot;/oppitm/lineitemsort.jsp&quot;); 
+      
+      //Set the id of the request to the opportunity ID 
+      var hiddenField = document.createElement(&quot;input&quot;); 
+      hiddenField.setAttribute(&quot;type&quot;, &apos;hidden&apos;); 
+      hiddenField.setAttribute(&quot;name&quot;, &apos;id&apos;); 
+      hiddenField.setAttribute(&quot;value&quot;, &apos;{!Opportunity.Id}&apos;); 
+      form.appendChild(hiddenField); 
+      
+      //The name of the sorted OLI list that the JSP is expecting is &quot;duel0&quot; 
+      var hiddenField = document.createElement(&quot;input&quot;); 
+      hiddenField.setAttribute(&quot;type&quot;, &apos;hidden&apos;); 
+      hiddenField.setAttribute(&quot;name&quot;, &apos;duel0&apos;); 
+      hiddenField.setAttribute(&quot;value&quot;, String(sortedIds)); 
+      form.appendChild(hiddenField); 
+      
+      var hiddenField = document.createElement(&quot;input&quot;); 
+      hiddenField.setAttribute(&quot;type&quot;, &apos;hidden&apos;); 
+      hiddenField.setAttribute(&quot;name&quot;, &apos;retURL&apos;); 
+      hiddenField.setAttribute(&quot;value&quot;, &apos;/{!Opportunity.Id}&apos;); 
+      form.appendChild(hiddenField); 
+
+      //set to save 
+      var hiddenField = document.createElement(&quot;input&quot;); 
+      hiddenField.setAttribute(&quot;type&quot;, &apos;hidden&apos;); 
+      hiddenField.setAttribute(&quot;name&quot;, &apos;save&apos;); 
+      hiddenField.setAttribute(&quot;value&quot;, &apos; Save &apos;); 
+      form.appendChild(hiddenField); 
+            
+      //need to do this so it works in IE 
+      document.body.appendChild(form); 
+      
+      //submit!! 
+      form.submit();
+   }
+   else{
+      alert(&apos;No line items to sort.&apos;);
+   }
+}</url>
+    </webLinks>
+</CustomObject>

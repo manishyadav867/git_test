@@ -1,0 +1,98 @@
+<!---------------------------------------- Visualforce Page for display the objects hierarchy ----------------------------------->
+<apex:page controller="ObjectHierarchy.AstreaObjectHierarchyController" sidebar="false">
+   </br>
+   <b> <center><u><font face="Arial" Style="color:#302217;" size="3pt">{!ParentobjectName} Hierarchy</font></u></center></br> <font face="Arial" Style="color:red;" size="2pt">{!showMsg}</font>
+    </b></br></br>
+    
+    
+     <div class="treeNode">
+           <apex:repeat value="{!ObjectStructure}" var="pos" >
+           <apex:repeat value="{!pos.levelFlag}" var="flag" first="0">
+               <apex:image url="/img/tree/empty.gif" height="16" width="20" rendered="{!IF(flag,false,true)}"/>
+               <apex:image url="/s.gif" alt="" width="3" height="16" rendered="{!IF(flag,true,false)}"/>
+               <apex:image url="/img/tree/chain.gif" height="16" width="20" rendered="{!IF(flag,true,false)}"/>
+           </apex:repeat>
+
+           <span height="16" v="top">
+
+           <apex:outputText rendered="{!IF(pos.nodeType=='start',true,false)}">
+               <apex:image id="tree_start" url="/img/tree/minusStart.gif" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}');changeImage('{!$Component.tree_start}', 1)"/>
+               <apex:image id="Icon_start" url="/img/icon/square16.png" width="16" height="16" rendered="{!IF(pos.currentNode,false,true)}"/>
+               <apex:image id="Icon_start_current" url="/img/icon/custom51_100/globe16.png" width="16" height="16" rendered="{!IF(pos.currentNode,true,false)}"/>
+           </apex:outputText>
+           
+           <apex:outputText rendered="{!IF(AND(OR(pos.nodeType=='parent',pos.nodeType=='parent_end')),true,false)}">
+               
+               <apex:image id="Tree_parent" url="/img/tree/minus.gif" rendered="{!IF(pos.nodeType=='parent',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}');changeImage('{!$Component.Tree_parent}', 2)"/>
+               <apex:image id="Tree_parent_end" url="/img/tree/minusEnd.gif" rendered="{!IF(pos.nodeType=='parent_end',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}');changeImage('{!$Component.Tree_parent_end}', 3)"/>                
+               <!--<apex:image id="Icon_parent" url="/img/icon/desk16.png" width="16" height="16" rendered="{!IF(pos.currentNode,true,false)}"/>-->
+               <apex:image id="Icon_parent_current" url="/img/icon/custom51_100/cup16" width="16" height="16" rendered="{!IF(pos.currentNode && pos.labelcount=='second',false,true)}"/>
+               <apex:image id="Icon_parent_current1" url="/img/icon/square16.png" width="16" height="16" rendered="{!IF(pos.currentNode && pos.labelcount=='third',false,true)}"/>
+            
+           </apex:outputText>
+          
+        <!--********************Code for shownig different icons for children*******************************-->     
+           <apex:outputText rendered="{!IF(AND(OR(pos.nodeType=='child',pos.nodeType=='child_end')),true,false)}">
+               <apex:image id="Tree_child" url="/img/tree/node.gif" rendered="{!IF(pos.nodeType=='child',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}')"/> 
+               <apex:image id="Tree_child_current" url="/img/tree/nodeEnd.gif" rendered="{!IF(pos.nodeType=='child_end',true,false)}" height="16" width="20" title="Click to expand/collapse nested items." onClick="TreeNodeElement.prototype.toggle(this,'{!pos.nodeId}')"/>
+               <!--<apex:image id="Icon_child" url="/img/icon/plane16.png" width="16" height="16" rendered="{!IF(pos.currentNode ,true,false)}"/>-->
+               <apex:image id="Icon_child_current" url="/img/icon/custom51_100/cup16.png" width="16" height="16" rendered="{!IF(pos.currentNode  && pos.labelcount=='second' ,false,true)}"/>
+               <apex:image id="Icon_child_current1" url="/img/icon/square16.png" width="16" height="16" rendered="{!IF(pos.currentNode  && pos.labelcount!='third'&& pos.labelcount!='second',false,true)}"/>
+             
+           </apex:outputText>
+       <!--***************************************************-->  
+       
+           <apex:outputText rendered="{!IF(pos.nodeType=='end',true,false)}">
+           
+               <apex:image id="Tree_end" url="/img/tree/nodeEnd.gif" height="16" width="20"/>
+              <!-- <apex:image id="Icon_end" url="/img/icon/custom51_100/cup16" width="16" height="16" rendered="{!IF(pos.currentNode  && pos.labelcount=='second',false,true)}"/>
+               <apex:image id="Icon_end1" url="/img/icon/square16.png" width="16" height="16" rendered="{!IF(pos.currentNode && pos.labelcount=='third' ,false,true)}"/>-->
+             
+               <apex:image id="Icon_end" url="/img/icon/custom51_100/cup16.png" width="16" height="16" rendered="{!IF(pos.currentNode  && pos.labelcount!='second' && pos.labelcount!='first' ,true,false)}"/>
+               <apex:image id="Icon_end1" url="/img/icon/square16.png" width="16" height="16" rendered="{!IF(pos.currentNode && pos.labelcount!='Third' && pos.labelcount!='first' ,true,false)}"/>
+             
+             <!--  <apex:image id="Icon_end_current" url="/img/icon/square16.png" width="16" height="16" rendered="{!IF(pos.currentNode  && pos.labelcount=='second',true,false)}"/>-->
+               <apex:image id="Icon_end_current1" url="/img/icon/custom51_100/globe16.png" width="16" height="16" rendered="{!IF(pos.currentNode && pos.labelcount=='first',true,false)}"/>
+
+           </apex:outputText>
+           
+         <apex:outputLink value="/{!pos.objType.id}" style="{!IF(pos.currentNode,'font-weight: ;','')}" styleClass="columnHeadActiveBlack" target="_top">{!pos.recordName}<!--{!pos.objType.name}--></apex:outputLink><!-- {!pos.account.RecordtypeId}-->
+<!-- Include the following if you uses sites with accounts -->
+         <i><apex:outputText style="{!IF(pos.currentNode,'font-weight:bold;','')}" value=", {!pos.LabelName}" rendered="{!IF(pos.objType != '', true, false)}"/></i>
+           </span>
+           <div> </div>
+           <apex:outputText rendered="{!IF(OR(pos.nodeType=='child_end',pos.nodeType=='child'),false,true)}">
+               <div id='{!pos.nodeId}'>
+           </apex:outputText>
+           <apex:outputText rendered="{!IF(OR(pos.nodeType=='child_end',pos.nodeType=='child'),true,false)}">
+               <div id='{!pos.nodeId}'><apex:image url="/s.gif" alt="" width="1" height="1"/></div>
+           </apex:outputText>
+           <apex:repeat value="{!pos.closeFlag}" var="close">
+               </div>
+           </apex:repeat>
+
+   </apex:repeat>
+   <br/><br/><br/>
+ </div>
+ 
+<!-- JavaScript code for collapse/Expand (showing plus or minus) in the hierarchy -->
+<script type="text/javascript">
+String.prototype.endsWith = function(str){return (this.match(str+"$")==str)}
+function changeImage(s, i) {
+     imageURL = document.getElementById(s).src;
+     if (i == 1) {
+         if (imageURL.endsWith("/img/tree/minusStart.gif")) imageURL = "/img/tree/plusStart.gif";
+         else if (imageURL.endsWith("/img/tree/plusStart.gif")) imageURL = "/img/tree/minusStart.gif";
+     } else if (i == 2) {
+         if (imageURL.endsWith("/img/tree/minus.gif")) imageURL = "/img/tree/plus.gif";
+         else if (imageURL.endsWith("/img/tree/plus.gif")) imageURL = "/img/tree/minus.gif";
+     } else if (i == 3) {
+         if (imageURL.endsWith("/img/tree/minusEnd.gif")) imageURL = "/img/tree/plusEnd.gif";
+         else if (imageURL.endsWith("/img/tree/plusEnd.gif")) imageURL = "/img/tree/minusEnd.gif";
+     } else {
+        return;
+     }
+     document.getElementById(s).src=imageURL;
+} 
+</script>
+</apex:page>

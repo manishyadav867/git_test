@@ -1,0 +1,53 @@
+<apex:page controller="dsfs.DocuSignAdminController" tabstyle="DocuSign_Admin__tab" action="{!initConfiguration}">
+<style>
+    .ds_button_wrapper {padding: 10px;layout: block;text-align: left;}
+    .ds_setuptext {padding: 10px; text-align: left;}
+    .activeTab {background-color: #cccccc; color:black; background-image:none}
+    .inactiveTab {background-color: lightgrey; color:black; background-image:none}
+</style>
+<apex:form >
+<apex:pageMessages />
+<apex:tabPanel switchType="AJAX" id="tabAdminPanel" value="{!StartTab}" rendered="{!ErrorOnInit==false}">
+<apex:tab label="Configure Account" name="ActivateAccount" id="ActivateAccount" rendered="{!IsCurrentUserAdmin==true}">
+    <c:DocuSignActivateAccount />
+</apex:tab>
+<apex:tab label="Manage Users" name="ActivateMembers" id="ActivateMembers" rendered="{!IsCurrentUserAdmin==true}">
+    <c:DocuSignActivateMembers />
+</apex:tab>
+<apex:tab label="Administration" name="Administration" id="Administration" rendered="{!CanSeeAdministrationTab}">
+    <apex:pageblock title="Setup Your Account" rendered="{!HasDocuSignAccount == false && IsCurrentUserAdmin == true}">   
+        <apex:outputPanel styleclass="ds_setuptext" layout="block">
+            Your account is not configured for DocuSign. Please click the Setup button to begin the configuration process and start 
+            using DocuSign For Salesforce
+        </apex:outputPanel>
+        <apex:outputPanel styleclass="ds_button_wrapper" layout="block">
+            <apex:commandButton action="{!GotoSetup}" value="Setup" id="theSetupButton" />
+        </apex:outputPanel>
+    </apex:pageBlock>
+    
+    <apex:pageblock title="DocuSign Setup Required" 
+        rendered="{!HasDocuSignAccount == false && IsCurrentUserAdmin == false}">   
+        <apex:outputPanel >
+            Your account is not configured for DocuSign. Setting up DocuSign requires System Administrator privileges. <br/>
+            Please use an account with System Administration privileges or ask your system administrator to configure DocuSign.<br/> 
+        </apex:outputPanel>
+    </apex:pageBlock> 
+    
+    <apex:pageblock title="DocuSign Administration" rendered="{!HasDocuSignAccount == true}">   
+    <c:DocuSignAccountInfo rendered="{!IsCurrentUserAdmin==true}"/>
+    <c:DocuSignManagePasswordComponent theUserId="{!DocuSignUserName}" />
+    </apex:pageblock>
+</apex:tab>
+<apex:tab label="Envelope Settings" name="EnvelopeSettings" id="EnvelopeSettings" rendered="{!IsCurrentUserAdmin==true}">
+    <c:DocuSignEnvelopeSettings rendered="{!HasDocuSignAccount == true && IsCurrentUserAdmin==true}"/>
+    <apex:outputLabel value="You must be an adminstrator to access this section." 
+        rendered="{!IsCurrentUserAdmin==false}" />
+    <apex:outputLabel value="Your DocuSign account is not yet configured." 
+        rendered="{!HasDocuSignAccount == false}" />
+</apex:tab>
+<apex:tab label="DocuSign Console" name="DocuSignConsole" id="DocuSignConsole">
+    <c:DocuSignConsole />
+</apex:tab>
+</apex:tabPanel>
+</apex:form>
+</apex:page>

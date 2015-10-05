@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Public</customSettingsVisibility>
+    <description>Profile and User specific Bundle configuration</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Can_edit_Description__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Can this user edit Bundle description?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Can this user edit Bundle description?</inlineHelpText>
+        <label>Can edit Bundle Description</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Can_edit_Price__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Can this user edit Bundle price?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Can this user edit Bundle price?</inlineHelpText>
+        <label>Can edit Bundle Price</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Can_edit_Quantity__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Can this user edit Bundle quantity?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Can this user edit Bundle quantity?</inlineHelpText>
+        <label>Can edit Bundle Quantity</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Discount_changes_Sale_Price__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>While adding Bundles and Products, do you want sale price to change when giving discount? If not checked, discount will update the sub total field instead.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>While adding Bundles and Products, do you want sale price to change when giving discount? If not checked, discount will update the sub total field instead.</inlineHelpText>
+        <label>Discount changes Sale Price?</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Display_Advance_Filters__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Show advance product and bundle filters</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Show advance product and bundle filters</inlineHelpText>
+        <label>Display Advance Filters</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Display_Bundle_Section__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Can user add decomposed bundle upfront?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Can user add decomposed bundle upfront?</inlineHelpText>
+        <label>Display Bundle Section</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Display_Cost_and_Margin__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Can this user see product cost and margin?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Can this user see product cost and margin?</inlineHelpText>
+        <label>Display Cost and Margin</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Display_Image__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Can this user see product image?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Can this user see product image?</inlineHelpText>
+        <label>Display Image</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Display_Sort_By__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Display sort by dropdown</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Display sort by dropdown</inlineHelpText>
+        <label>Display Sort By</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Number_of_items_to_display__c</fullName>
+        <defaultValue>100</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Number of products and bundles to display. Max value 999. 
+Note: Users may notice some time lag for bigger number</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of products and bundles to display. Max value 999. 
+Note: Users may notice some time lag for bigger number</inlineHelpText>
+        <label>Number of items to display</label>
+        <precision>3</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Filter__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Formula to filter products based on role and profile.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Formula to filter products based on role and profile.</inlineHelpText>
+        <label>Product Filter</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Replace_line_items_with_Bundle__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Should &quot;Bundle on fly&quot; replace the opportunity or quote line items?</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Should &quot;Bundle on fly&quot; replace the opportunity or quote line items?</inlineHelpText>
+        <label>Replace line items with Bundle</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <label>Bundle</label>
+</CustomObject>

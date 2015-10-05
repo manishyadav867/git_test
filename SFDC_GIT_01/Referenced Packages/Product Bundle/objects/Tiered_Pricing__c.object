@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <customHelpPage>ProductBundle_Documentation</customHelpPage>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <description>Volume Pricing for the products</description>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <fields>
+        <fullName>Discount__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This discount will be applied when the product is selected for given quantity. Users can override it.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This discount will be applied when the product is selected for given quantity. Users can override it.</inlineHelpText>
+        <label>Discount (%)</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Flat_Rate__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This rate will be applied when the product is selected for given quantity. Users can override it.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This rate will be applied when the product is selected for given quantity. Users can override it.</inlineHelpText>
+        <label>Flat Rate</label>
+        <precision>12</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Price_Book__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Select a price book.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Select a price book.</inlineHelpText>
+        <label>Price Book</label>
+        <referenceTo>Pricebook2</referenceTo>
+        <relationshipName>Tiered_Pricing</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Product__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product</label>
+        <referenceTo>Product2</referenceTo>
+        <relationshipName>Tiered_Pricing</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Quantity_From__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Min quantity, including this one. E.g. 1, 10</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Min quantity, including this one. E.g. 1, 10</inlineHelpText>
+        <label>Quantity From</label>
+        <precision>10</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Quantity_To__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Max quantity, including this one. E.g. 99, 199</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Max quantity, including this one. E.g. 99, 199</inlineHelpText>
+        <label>Quantity To</label>
+        <precision>10</precision>
+        <required>true</required>
+        <scale>0</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Segment__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Choose market/customer segment(s).</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Choose market/customer segment(s).</inlineHelpText>
+        <label>Segment</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Segment A</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Segment B</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Segment C</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <label>Volume Pricing</label>
+    <nameField>
+        <label>Label</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Volume Pricing</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Quantity_To__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Quantity_From__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Discount__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Price_Book__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Segment__c</lookupDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Quantity_To__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Quantity_From__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Discount__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Price_Book__c</lookupPhoneDialogsAdditionalFields>
+        <lookupPhoneDialogsAdditionalFields>Segment__c</lookupPhoneDialogsAdditionalFields>
+        <searchFilterFields>NAME</searchFilterFields>
+        <searchFilterFields>Quantity_To__c</searchFilterFields>
+        <searchFilterFields>Quantity_From__c</searchFilterFields>
+        <searchFilterFields>Discount__c</searchFilterFields>
+        <searchFilterFields>Price_Book__c</searchFilterFields>
+        <searchFilterFields>Segment__c</searchFilterFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>either_Discount_or_FlatRate</fullName>
+        <active>true</active>
+        <errorConditionFormula>OR(
+  AND(
+    ISBLANK(Discount__c),
+    ISBLANK(Flat_Rate__c) 
+  ),
+  AND(
+    NOT(ISBLANK(Discount__c)),
+    NOT(ISBLANK(Flat_Rate__c)) 
+  )
+)</errorConditionFormula>
+        <errorMessage>Please provide either discount or flat rate. You cannot provide both.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>isRangeValid</fullName>
+        <active>true</active>
+        <description>max qty. &gt;= min qty.</description>
+        <errorConditionFormula>IF( Quantity_To__c &lt;  Quantity_From__c , true, false)</errorConditionFormula>
+        <errorMessage>Please enter valid range.</errorMessage>
+    </validationRules>
+</CustomObject>

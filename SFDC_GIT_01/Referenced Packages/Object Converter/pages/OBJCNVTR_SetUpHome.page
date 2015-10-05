@@ -1,0 +1,23 @@
+<apex:page controller="OBJCNVTR.setUpHome">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!goHome}" value="Home"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!lstWrapperConfigureItems}" var="ConfigureItems">
+                <apex:column >
+                    <apex:facet name="header"></apex:facet>
+                    <apex:outputlink value="{!ConfigureItems.URL}">{!ConfigureItems.URLLabel}</apex:outputlink>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Title</apex:facet>
+                    <apex:outputText value="{!ConfigureItems.Name}"></apex:outputText>
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">Description</apex:facet>
+                    <apex:outputText value="{!ConfigureItems.Description}"></apex:outputText>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

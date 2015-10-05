@@ -1,0 +1,132 @@
+<apex:component controller="dsfs.DocuSignAccountInfoController" allowDml="true" >
+<script>
+function SetTrustedNetwork()
+{
+    var url = document.getElementById("hdnIpRangeUrl").value;
+    url = unescape(url);
+    window.open(url, "SFNetworkAddress", "height=600, width=800");
+}
+
+</script>      
+<apex:pageBlockSection title="DocuSign Account Information" 
+    rendered="{!DocuSignConfig.AreCredentialsSet == false && DocuSignConfig.HasDocuSignAccount==true}" >
+        <apex:outputPanel >
+        You can not view Account information until you have entered your DocuSign Credentials. 
+        Please enter or correct them as necessary and refresh the page.
+        </apex:outputPanel>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="DocuSign Account Information" 
+    rendered="{!DocuSignConfig.AreCredentialsSet == false && DocuSignConfig.HasDocuSignAccount==false}" >
+        <apex:outputPanel >DocuSign has not been configured for this account yet. 
+        </apex:outputPanel>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="DocuSign Account Information" columns="2" rendered="{!DocuSignConfig.AreCredentialsSet == true}"  collapsible="false">
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Account Name" for="accountName"/>
+        <apex:outputText value="{!DocuSignAccountInfo.AccountName}" id="accountName"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Account ID" for="accountId"/>
+        <apex:outputText value="{!DocuSignConfig.DocuSignAccountId}" id="accountId"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Plan Name" for="planName"/>
+        <apex:outputText value="{!DocuSignAccountInfo.CurrentPlanName}" id="planName"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Plan ID" for="planId"/>
+        <apex:outputText value="{!DocuSignAccountInfo.CurrentPlanId}" id="planId"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Plan Start Date" for="planStart"/>
+        <apex:outputText value="{!LEFT(DocuSignAccountInfo.CurrentPlanStartDate, Find(' ',DocuSignAccountInfo.CurrentPlanStartDate))}" id="planStart"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Plan End Date" for="planEnd"/>
+        <apex:outputText value="{!IF(OR(DocuSignAccountInfo.CurrentPlanEndDate == '', DocuSignAccountInfo.CurrentPlanEndDate == null), 
+            LEFT(DocuSignAccountInfo.CurrentPlanEndDate, Find(' ',DocuSignAccountInfo.CurrentPlanEndDate)),'Auto-Renewal' )}" id="planEnd"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Current Billing Period Start Date" for="bpStart"/>
+        <apex:outputText value="{!LEFT(DocuSignAccountInfo.CurrentBillingPeriodStartDate, 
+            Find(' ',DocuSignAccountInfo.CurrentBillingPeriodStartDate))}" id="bpStart"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Current Billing Period End Date" for="bpEnd"/>
+        <apex:outputText value="{!LEFT(DocuSignAccountInfo.CurrentBillingPeriodEndDate, Find(' ',DocuSignAccountInfo.CurrentBillingPeriodEndDate))}" id="bpStart"/> 
+    </apex:pageBlockSectionItem>
+    <!-- 
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Current Billing Period Envelopes Sent" for="envUsed"/>
+        <apex:outputText value="{!DocuSignAccountInfo.CurrentBillingPeriodEnvelopesSent}" id="envUsed"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel value="Current Billing Period Envelope Allowed" for="envAllowance"/>
+        <apex:outputText value="{!DocuSignAccountInfo.currentBillingPeriodEnvelopesAllowed}" id="envAllowance"/> 
+    </apex:pageBlockSectionItem>
+    -->
+    
+    <!-- connect user section -->
+    <apex:pageBlockSectionItem rendered="{!EditConnect == false}">
+        <apex:outputLabel value="Connect DocuSign To Salesforce" for="ConnectUser"/>
+        <apex:outputText value="{!'Current Salesforce User: ' + DocuSignConnectInfo.ConnectUserName}" id="ConnectUser"/> 
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem rendered="{!EditConnect == false}">
+        <apex:outputLabel value=""/>
+        <apex:outputLabel value=""/>
+    </apex:pageBlockSectionItem>
+    <apex:pageBlockSectionItem rendered="{!EditConnect == false}">
+        <apex:outputLabel value="" />
+        <apex:commandButton action="{!EditConnectUser}" value="Edit Salesforce User" id="btnConnectEdit" />
+    </apex:pageBlockSectionItem>    
+    <apex:pageBlockSectionItem rendered="{!EditConnect == false}">
+        <apex:outputLabel value=""/>
+        <apex:outputLabel value=""/>
+    </apex:pageBlockSectionItem>
+    
+    <!-- edit connect user section -->
+    <apex:pageBlockSectionItem rendered="{!EditConnect}">
+        <apex:outputLabel value="Connect DocuSign To Salesforce"/>
+        <apex:outputPanel id="sfUpdateBlock" layout="block">
+            <table cellpadding="2" cellspacing="0" border="0" style="">
+            <tr>
+            <td style="white-space: nowrap;" align="right"><apex:outputLabel value="Salesforce Environment" for="sfEnv"/></td>
+            <td style="white-space: nowrap;">
+            <apex:selectList id="sfEnv"  value="{!SalesforceEnvironmentForConnect}" multiselect="false" size="1" style="width: 200px;">
+                <apex:actionSupport event="onchange" rerender="sfUpdateBlock"/>
+                <apex:selectOptions value="{!SalesforceEnvironmentForConnectList}"/>
+            </apex:selectList> <apex:outputPanel id="CustomURLPanel" rendered="{!SalesforceEnvironmentForConnect=='custom'}">&nbsp;&nbsp;<apex:outputLabel value="URL" for="sfCustomUrl"/><apex:inputText value="{!CustomConnectURL}" id="sfCustomUrl" style="width: 300px;" /> </apex:outputPanel>
+            </td>
+            </tr>            
+            <tr>
+            <td style="white-space: nowrap;" align="right"><apex:outputLabel value="Salesforce User" /></td>
+            <td style="white-space: nowrap;">
+            <apex:inputField value="{!dummyRecordForUserLookup.dsfs__LookupUser__c}" id="connectUsernameEdit" style="width: 200px;" /> 
+            </td>
+            </tr>
+            <tr>
+            <td style="white-space: nowrap;" align="right">
+            <apex:outputLabel value="Salesforce Password" />
+            </td>
+            <td style="white-space: nowrap;">
+            <apex:inputSecret value="{!ConnectPassword}" id="connectPasswordEdit" style="width: 200px;" />
+            </td>
+            </tr>
+            <tr>
+            <td style="white-space: nowrap;" align="right"><apex:outputLabel value="Salesforce Token" for="connectSecurityToken" /></td>
+            <td style="white-space: nowrap;">
+                <apex:inputSecret value="{!ConnectSecurityToken}" id="connectSecurityToken" style="width: 200px;" />
+                &nbsp;&nbsp;or&nbsp;&nbsp;
+                <input type="button" class="btn" onclick="SetTrustedNetwork()" id="btnTrustedNetwork" value="Add DocuSign as a Trusted Network" />
+                (close pop-up after complete)
+            </td>
+            </tr>
+            </table>
+            <apex:commandButton action="{!SaveConnectUser}" value="Save" id="btnSaveConnectEdit" />
+            <apex:commandButton action="{!CancelEditConnectUser}" value="Cancel" id="btnCancelConnectEdit" />
+        </apex:outputPanel>
+    </apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+
+</apex:component>

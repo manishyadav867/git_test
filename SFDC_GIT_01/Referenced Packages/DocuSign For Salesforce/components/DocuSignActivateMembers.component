@@ -1,0 +1,148 @@
+<apex:component allowDML="true" controller="dsfs.DocuSignActivateMembersController" allowDml="true">
+<style>
+.headerrow
+{
+    background-color: #9BB1D9;
+    color: #ffffff;
+}
+.oddrow
+{
+    background-color: #E8E8E8;
+}
+.evenrow
+{
+    background-color: #FFFFFF;
+}
+</style>
+<apex:outputPanel layout="block" rendered="{!ShowHowToInvite}">
+    <apex:outputText >
+    <div style="padding-top: 5px;">
+    To invite and existing DocuSign user to your account follow the steps below.
+    </div>
+    <div style="padding-top: 10px; padding-left: 20px">
+    <li>Select the DocuSign Console tab</li>
+    <li>Select Preferences</li>
+    <li>Select Users</li>
+    <li>Select New</li>
+    <li>Enter email, then select Check Address</li>
+    <li>Select Save</li>
+    <li>Select Send</li>
+    </div>
+    <div style="padding-top: 10px; padding-bottom:10px">
+    After sending is complete the user will be invited into your account.
+    The user will be required to accept the invitation via an email link.
+    Once the invitation process is complete and the user attempts to use DocuSign for Salesforce they will be asked to link their DocuSign user account.
+    </div>
+    </apex:outputText>
+</apex:outputPanel>
+<apex:outputPanel layout="block" rendered="{!DocuSignConfig.HasDocuSignAccount}">
+    <apex:outputLabel for="selPerPage" value="Users displayed per list:" />
+    <apex:selectList value="{!PerPage}" id="selPerPage" multiselect="false" size="1" style="font-size: 11px"> 
+        <apex:selectOptions value="{!PerPageList}"/>
+        <apex:actionSupport event="onchange" action="{!PerPageChanged}" />
+    </apex:selectList>
+    <apex:outputLabel for="txtSearchText" value="Search User Name:" />
+    <apex:inputText id="txtSearchText" style="width: 120px; font-size: 11px" maxlength="255" value="{!UserSearchText}"/>
+    <apex:commandButton id="btnChangePaging" value="Go" action="{!PerPageChanged}" />
+    <apex:inputHidden id="hdnLastSearchText" value="{!LastUserSearchText}" />
+</apex:outputPanel>   
+<apex:pageblock title="Manage Users">
+    <apex:outputPanel layout="block" rendered="{!DocuSignConfig.HasDocuSignAccount == false}">
+        <apex:pageBlockSection title="Account Information" collapsible="false">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Your DocuSign Account is not yet configured. 
+                    You cannot manage members until Account configuration has been completed." />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" rendered="{!DocuSignConfig.HasDocuSignAccount && ShowActivateUsers==false}">
+        <apex:outputLabel value="All users are activated" />
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" rendered="{!DocuSignConfig.HasDocuSignAccount && ShowActivateUsers}">
+        <apex:outputLabel value="{!PagingActivate}" />
+        &nbsp;&nbsp;
+        <apex:outputLabel value="Previous" rendered="{!DisablePrevActivate}" style="color: #999999" />
+        <apex:commandLink rendered="{!DisablePrevActivate==false}" id="btnPreviousActivate" value="Previous" action="{!PreviousActivate}" />
+        &nbsp;&nbsp;
+        <apex:outputLabel value="Next" rendered="{!DisableNextActivate}" style="color: #999999" />
+        <apex:commandLink rendered="{!DisableNextActivate==false}" id="btnNextActivate" value="Next" action="{!NextActivate}" />
+        <apex:dataTable value="{!ActivateUsers}" var="user" id="tblActivateUsers" style="width: 100%; border: solid 1px #9BB1D9;" 
+            cellpadding="2" headerClass="headerrow" rowClasses="oddrow,evenrow">
+            <apex:column >
+                <apex:facet name="header">
+                <apex:outputLabel >
+                <apex:inputCheckbox title="Select All" value="{!SelectAllForActivate}">
+                <apex:actionSupport event="onclick" action="{!SelectAllActivate}"/>
+                </apex:inputCheckbox>
+                Activate
+                </apex:outputLabel>
+                </apex:facet>
+                <apex:inputCheckbox id="chkActivate" value="{!user.ActivateUser}" />
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">
+                <apex:outputLabel >
+                <apex:inputCheckbox title="Select All" value="{!SelectAllForActivateAdmin}">
+                <apex:actionSupport event="onclick" action="{!SelectAllAdmin}"/>
+                </apex:inputCheckbox>
+                Can Activate Users
+                </apex:outputLabel>
+                </apex:facet>
+                <apex:inputCheckbox id="chkAdmin" value="{!user.isAdmin}" />
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Name</apex:facet>
+                <apex:outputText value="{!user.memberFirstName} {!user.memberLastName}"/>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Email</apex:facet>
+                <apex:outputText value="{!user.memberEmailAddress}"/>
+            </apex:column>
+        </apex:dataTable>
+    </apex:outputPanel>
+    <apex:pageBlockButtons >
+        <apex:commandButton id="btnActivate" value="Activate" action="{!Activate}" 
+            disabled="{!DocuSignConfig.IsCurrentUserAdmin==false || ShowActivateUsers==false}" 
+            rendered="{!DocuSignConfig.HasDocuSignAccount}" />
+    </apex:pageBlockButtons>
+</apex:pageBlock>
+<apex:pageblock title="Active Users" rendered="{!DocuSignConfig.HasDocuSignAccount}">
+    <apex:outputPanel layout="block" rendered="{!DocuSignConfig.HasDocuSignAccount && ShowActiveUsers==false}">
+        <apex:outputLabel value="No users are active" />
+    </apex:outputPanel>
+    <apex:outputPanel layout="block" rendered="{!DocuSignConfig.HasDocuSignAccount && ShowActiveUsers}">
+        <apex:outputLabel value="{!PagingActive}" />
+        &nbsp;&nbsp;
+        <apex:outputLabel value="Previous" rendered="{!DisablePrevActive}" style="color: #999999" />
+        <apex:commandLink rendered="{!DisablePrevActive==false}" id="btnPreviousActive" value="Previous" action="{!PreviousActive}" />
+        &nbsp;&nbsp;
+        <apex:outputLabel value="Next" rendered="{!DisableNextActive}" style="color: #999999" />
+        <apex:commandLink rendered="{!DisableNextActive==false}" id="btnNextActive" value="Next" action="{!NextActive}" />
+        <apex:dataTable value="{!ActiveUsers}" var="user" id="tblActiveUsers" style="width: 100%; border: solid 1px #9BB1D9;" 
+            cellpadding="2" headerClass="headerrow" rowClasses="oddrow,evenrow">
+        <apex:column >
+            <apex:facet name="header">Name</apex:facet>
+            <apex:outputText value="{!user.memberFirstName} {!user.memberLastName}"/>
+        </apex:column>
+        <apex:column >
+            <apex:facet name="header">Email</apex:facet>
+            <apex:outputText value="{!user.memberEmailAddress}"/>
+        </apex:column>
+        <apex:column >
+            <apex:facet name="header">DocuSign User</apex:facet>
+            <apex:outputText value="{!user.docusignUserId}"/>
+        </apex:column>
+        <apex:column >
+            <apex:facet name="header">Remove</apex:facet>
+            <apex:commandLink value="Remove" action="{!Deactivate}" rendered="{!DocuSignConfig.IsCurrentUserAdmin}" >
+                <apex:param name="DeactivateUser" value="{!user.salesforceUserId}"/>
+            </apex:commandLink>
+            <apex:outputLabel value="Remove" rendered="{!DocuSignConfig.IsCurrentUserAdmin==false}" style="color: #999999" />
+        </apex:column>
+        </apex:dataTable>
+    </apex:outputPanel>
+    <apex:pageBlockButtons rendered="{!ShowResetBtn}" location="top">
+        <apex:commandButton rendered="{!ShowResetBtn}" value="Refresh" action="{!ResetActiveUsersPasswords}" />
+    </apex:pageBlockButtons>
+</apex:pageblock>
+</apex:component>
