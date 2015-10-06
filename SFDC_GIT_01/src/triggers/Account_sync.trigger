@@ -34,7 +34,8 @@ trigger Account_sync on Account (after insert, after update){
                     requestAccountRequestMaps.put('Industry',acc.Industry_New__c);
                     requestAccountRequestMaps.put('Website',acc.Website);
                     requestAccountRequestMaps.put('Country',acc.Country__c);
-                    requestAccountRequestMaps.put('Account Name(CM) - Airtwach',acc.Name);              
+                    requestAccountRequestMaps.put('Account Name(CM) - Airtwach',acc.Name); 
+                    system.debug("hiiiii");
                 }        
         }   
             if(!requestAccountRequestMaps.isEmpty()){ 
