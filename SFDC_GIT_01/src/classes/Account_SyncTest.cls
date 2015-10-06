@@ -59,8 +59,18 @@ public class Account_SyncTest {
                                                             
                                                             
                                                             
-                                                            
-                                                            
+          public void test(){
+          
+          	system.debug("hiiiiiii");
+          
+          }                                                  
+            
+            
+            public void test1(){
+          
+          	system.debug("hiiiiiii");
+          
+          }                                                 
                                                             
                                           
                                                             
