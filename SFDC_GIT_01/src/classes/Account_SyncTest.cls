@@ -59,7 +59,11 @@ public class Account_SyncTest {
                                                             
                                                             
                                                             
-                                                            
+          public void test(){
+          
+          	system.debug("hiiiiiii");
+          
+          }                                                  
                                                             
                                                             
                                           
