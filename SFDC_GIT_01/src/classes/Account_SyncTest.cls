@@ -73,7 +73,12 @@ public class Account_SyncTest {
           }                                                 
                                                             
                                           
-                                                            
+           
+             public void test2(){
+          
+          	system.debug("hiiiiiii");
+          
+          }                                                    
                                                             
                                                             
                                                             
