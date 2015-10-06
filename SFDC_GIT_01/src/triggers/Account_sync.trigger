@@ -7,7 +7,8 @@ Purpose:
 History
 -------
 VERSION        CR#                              AUTHOR                  DATE              DETAIL              
-1.0        CR-00134988/CR-00135343          Sanjib Mahanta         24-June-2015      Initial Development                         
+1.0        CR-00134988/CR-00135343          Sanjib Mahanta         24-June-2015      Initial Development  
+1.1        GIT-HUB                          TEST- VMWARE                                   
 *************************************************************************************************/ 
 trigger Account_sync on Account (after insert, after update){
 	
